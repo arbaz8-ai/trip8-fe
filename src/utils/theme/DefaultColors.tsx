@@ -1,5 +1,15 @@
-import { createTheme } from "@mui/material/styles";
+import {
+  amberPalette,
+  blueGreyPalette,
+  bluePalette,
+  commonColor,
+  greyPalette,
+  skyPalette,
+  tripImerialRed,
+} from "./tripColor";
+
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { createTheme } from "@mui/material/styles";
 
 export const plus = Plus_Jakarta_Sans({
   weight: ["300", "400", "500", "600", "700"],
@@ -11,52 +21,45 @@ export const plus = Plus_Jakarta_Sans({
 const baselightTheme = createTheme({
   direction: "ltr",
   palette: {
+    mode: "light",
     primary: {
-      main: "#5D87FF",
-      light: "#ECF2FF",
-      dark: "#4570EA",
+      main: bluePalette.A400,
+      light: bluePalette.A400,
+      contrastText: commonColor.white,
     },
     secondary: {
-      main: "#49BEFF",
-      light: "#E8F7FF",
-      dark: "#23afdb",
+      main: skyPalette[500],
+      light: skyPalette[500],
+      contrastText: commonColor.black,
     },
-    success: {
-      main: "#13DEB9",
-      light: "#E6FFFA",
-      dark: "#02b3a9",
-      contrastText: "#ffffff",
-    },
-    info: {
-      main: "#539BFF",
-      light: "#EBF3FE",
-      dark: "#1682d4",
-      contrastText: "#ffffff",
-    },
+    // success: {
+    //   main: "#13DEB9",
+    //   light: "#E6FFFA",
+    //   contrastText: "#ffffff",
+    // },
+    // info: {
+    //   main: "#539BFF",
+    //   light: "#EBF3FE",
+    //   contrastText: "#ffffff",
+    // },
     error: {
-      main: "#FA896B",
-      light: "#FDEDE8",
-      dark: "#f3704d",
-      contrastText: "#ffffff",
+      main: tripImerialRed[300],
+      light: tripImerialRed[300],
+      contrastText: commonColor.black,
     },
     warning: {
-      main: "#FFAE1F",
-      light: "#FEF5E5",
-      dark: "#ae8e59",
-      contrastText: "#ffffff",
+      main: amberPalette[300],
+      light: amberPalette[300],
+      contrastText: commonColor.black,
     },
     grey: {
-      100: "#F2F6FA",
-      200: "#EAEFF4",
-      300: "#DFE5EF",
-      400: "#7C8FAC",
-      500: "#5A6A85",
-      600: "#2A3547",
+      ...greyPalette,
     },
     text: {
-      primary: "#2A3547",
-      secondary: "#5A6A85",
+      primary: blueGreyPalette[900],
+      secondary: greyPalette[700],
     },
+    background: { paper: "#FAFAFA", default: commonColor.white },
     action: {
       disabledBackground: "rgba(73,82,88,0.12)",
       hoverOpacity: 0.02,
@@ -79,9 +82,10 @@ const baselightTheme = createTheme({
       fontFamily: plus.style.fontFamily,
     },
     h3: {
-      fontWeight: 600,
-      fontSize: "1.5rem",
-      lineHeight: "1.75rem",
+      fontWeight: 700,
+      fontSize: 20,
+      color: blueGreyPalette[900],
+      lineHeight: 1.2,
       fontFamily: plus.style.fontFamily,
     },
     h4: {
@@ -95,8 +99,8 @@ const baselightTheme = createTheme({
       lineHeight: "1.6rem",
     },
     h6: {
-      fontWeight: 600,
-      fontSize: "1rem",
+      fontWeight: 700,
+      fontSize: 16,
       lineHeight: "1.2rem",
     },
     button: {
@@ -124,15 +128,26 @@ const baselightTheme = createTheme({
     },
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        ".MuiPaper-elevation9, .MuiPopover-root .MuiPaper-elevation": {
-          boxShadow:
-            "rgb(145 158 171 / 30%) 0px 0px 2px 0px, rgb(145 158 171 / 12%) 0px 12px 24px -4px !important",
-        },
+    // MuiCssBaseline: {
+    //   styleOverrides: {
+    //     ".MuiPaper-elevation9, .MuiPopover-root .MuiPaper-elevation": {
+    //       boxShadow:
+    //         "rgb(145 158 171 / 30%) 0px 0px 2px 0px, rgb(145 158 171 / 12%) 0px 12px 24px -4px !important",
+    //     },
+    //   },
+    // },
 
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "none",
+          },
+        },
       },
     },
+
     MuiCard: {
       styleOverrides: {
         root: {
@@ -140,8 +155,6 @@ const baselightTheme = createTheme({
         },
       },
     },
-
-
   },
 });
 
