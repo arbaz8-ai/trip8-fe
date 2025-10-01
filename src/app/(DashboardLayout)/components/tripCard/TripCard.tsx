@@ -152,51 +152,6 @@ const TripCard = () => {
               >
                 <CardTag label="10 Dec 24" Icon={LocationOnOutlinedIcon} />
               </Box>
-              {/* <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: "1.25rem",
-                  color: "white",
-                  textShadow: "0 1px 3px rgba(0,0,0,0.8)",
-                }}
-              >
-                Assam
-              </Typography> */}
-
-              {/* <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 0.5,
-                  alignItems: "flex-end",
-                }}
-              >
-                <Chip
-                  label="6N/5D"
-                  size="small"
-                  sx={{
-                    backgroundColor: "primary.main",
-                    color: "white",
-                    fontWeight: 700,
-                    fontSize: "0.7rem",
-                    height: 22,
-                    minWidth: 60,
-                  }}
-                />
-                <Chip
-                  label="10 Dec 24"
-                  size="small"
-                  sx={{
-                    backgroundColor: "primary.main",
-                    color: "white",
-                    fontWeight: 700,
-                    fontSize: "0.7rem",
-                    height: 22,
-                    minWidth: 60,
-                  }}
-                />
-              </Box> */}
             </Box>
           </Box>
 
