@@ -10,29 +10,28 @@ class FetchClient {
   }
 
   private async getAuthToken(): Promise<string | null> {
-    // Get token from your storage (localStorage, cookies, etc.)
     if (typeof window !== "undefined") {
-      return localStorage.getItem("authToken");
+      return localStorage.getItem("token");
     }
     return null;
   }
 
   private async getHeaders(customHeaders?: HeadersInit): Promise<HeadersInit> {
     const token = await this.getAuthToken();
-    const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
-
-    return {
-      ...this.defaultHeaders,
-      ...authHeader,
-      ...customHeaders,
+    const headers: Record<string, string> = {
+      ...((this.defaultHeaders as Record<string, string>) || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(customHeaders ? (customHeaders as Record<string, string>) : {}),
     };
+
+    return headers;
   }
 
-  async request(
+  async request<T = any>(
     endpoint: string,
     options: RequestInit = {}
-  ): Promise<Response> {
-    const url = `${this.baseURL}${endpoint}`;
+  ): Promise<{ response: Response; data: T }> {
+    const url = `${this.baseURL}/${endpoint}`;
     const headers = await this.getHeaders(options.headers);
 
     const config: RequestInit = {
@@ -43,76 +42,129 @@ class FetchClient {
     try {
       const response = await fetch(url, config);
 
-      // Handle unauthorized responses
       if (response.status === 401) {
-        // Redirect to login or refresh token
         if (typeof window !== "undefined") {
-          window.location.href = "/auth/login";
+          window.location.href = "/authentication/login";
         }
         throw new Error("Unauthorized");
       }
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (error: unknown) {
+          console.log(error);
+        }
+        throw new Error(errorMessage);
       }
 
-      return response;
+      const data = (await response.json()) as T;
+
+      return {
+        response,
+        data,
+      };
     } catch (error) {
       console.error("API request failed:", error);
       throw error;
     }
   }
 
-  // Convenience methods
-  async get(endpoint: string, options?: RequestInit): Promise<Response> {
-    return this.request(endpoint, { ...options, method: "GET" });
+  async get<T = any>(
+    endpoint: string,
+    options?: RequestInit
+  ): Promise<{ response: Response; data: T }> {
+    return this.request<T>(endpoint, { ...options, method: "GET" });
   }
 
-  async post(
+  async post<T = any>(
     endpoint: string,
     data?: any,
     options?: RequestInit
-  ): Promise<Response> {
-    return this.request(endpoint, {
+  ): Promise<{ response: Response; data: T }> {
+    return this.request<T>(endpoint, {
       ...options,
       method: "POST",
       body: data ? JSON.stringify(data) : undefined,
     });
   }
 
-  async put(
+  async put<T = any>(
     endpoint: string,
     data?: any,
     options?: RequestInit
-  ): Promise<Response> {
-    return this.request(endpoint, {
+  ): Promise<{ response: Response; data: T }> {
+    return this.request<T>(endpoint, {
       ...options,
       method: "PUT",
       body: data ? JSON.stringify(data) : undefined,
     });
   }
 
-  async delete(endpoint: string, options?: RequestInit): Promise<Response> {
-    return this.request(endpoint, { ...options, method: "DELETE" });
+  async delete<T = any>(
+    endpoint: string,
+    options?: RequestInit
+  ): Promise<{ response: Response; data: T }> {
+    return this.request<T>(endpoint, { ...options, method: "DELETE" });
   }
 
-  async patch(
+  async patch<T = any>(
     endpoint: string,
     data?: any,
     options?: RequestInit
-  ): Promise<Response> {
-    return this.request(endpoint, {
+  ): Promise<{ response: Response; data: T }> {
+    return this.request<T>(endpoint, {
       ...options,
       method: "PATCH",
       body: data ? JSON.stringify(data) : undefined,
     });
   }
+
+  async getData<T = any>(endpoint: string, options?: RequestInit): Promise<T> {
+    const { data } = await this.get<T>(endpoint, options);
+    return data;
+  }
+
+  async postData<T = any>(
+    endpoint: string,
+    data?: any,
+    options?: RequestInit
+  ): Promise<T> {
+    const result = await this.post<T>(endpoint, data, options);
+    return result.data;
+  }
+
+  async putData<T = any>(
+    endpoint: string,
+    data?: any,
+    options?: RequestInit
+  ): Promise<T> {
+    const result = await this.put<T>(endpoint, data, options);
+    return result.data;
+  }
+
+  async deleteData<T = any>(
+    endpoint: string,
+    options?: RequestInit
+  ): Promise<T> {
+    const { data } = await this.delete<T>(endpoint, options);
+    return data;
+  }
+
+  async patchData<T = any>(
+    endpoint: string,
+    data?: any,
+    options?: RequestInit
+  ): Promise<T> {
+    const result = await this.patch<T>(endpoint, data, options);
+    return result.data;
+  }
 }
 
-// Create instance with base URL
-export const fetchClient = new FetchClient(
-  process.env.NEXT_PUBLIC_API_BASE_URL
-);
+const baseURL = `${process.env.NEXT_PUBLIC_API_PROTOCOL}://${process.env.NEXT_PUBLIC_API_HOST}`;
 
-// Default instance without base URL
-export const apiClient = new FetchClient();
+export const tripAPI = new FetchClient(baseURL);
+
+// export const tripAPI = new FetchClient();

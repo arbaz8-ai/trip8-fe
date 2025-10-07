@@ -36,6 +36,7 @@
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@tanstack/eslint-plugin-query": "^5.90.1",
+    "@svgr/webpack": "^8.1.0",
     "@types/lodash": "4.14.196",
     "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "^9.36.0",

@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Button, Container, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  lighten,
+  useTheme,
+} from "@mui/material";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -10,8 +17,27 @@ import React from "react";
 import TripCard from "../components/tripCard/TripCard";
 import { TripStyledSubText } from "@/components/typography/TripTypography";
 
+const TRIP_PROCESS = [
+  {
+    label: "Tell Us Where You Want to Go & What you Prefer",
+    text: "Enter your trip details — dates, destinations, preferences.",
+  },
+  {
+    label: "Tell Us Where You Want to Go & What you Prefer",
+    text: "Enter your trip details — dates, destinations, preferences.",
+  },
+  {
+    label: "Tell Us Where You Want to Go & What you Prefer",
+    text: "Enter your trip details — dates, destinations, preferences.",
+  },
+  {
+    label: "Tell Us Where You Want to Go & What you Prefer",
+    text: "Enter your trip details — dates, destinations, preferences.",
+  },
+];
 const HomePage = () => {
   const theme = useTheme();
+
   return (
     <Container
       maxWidth="xl"
@@ -112,7 +138,7 @@ const HomePage = () => {
         >
           {Array.from({ length: 10 }).map((_, index) => (
             <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard />
+              <TripCard date={"10 oct 2025"} duration="5D/6N" place="Asssam" />
             </Box>
           ))}
         </Box>
@@ -137,7 +163,7 @@ const HomePage = () => {
         >
           {Array.from({ length: 10 }).map((_, index) => (
             <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard />
+              <TripCard date={"10 oct 2025"} duration="5D/6N" place="Asssam" />
             </Box>
           ))}
         </Box>
@@ -162,7 +188,7 @@ const HomePage = () => {
         >
           {Array.from({ length: 10 }).map((_, index) => (
             <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard />
+              <TripCard date={"10 oct 2025"} duration="5D/6N" place="Asssam" />
             </Box>
           ))}
         </Box>
@@ -182,6 +208,71 @@ const HomePage = () => {
           gives you access to the most authentic and affordable trips in this
           magical region.
         </TripStyledSubText>
+      </Box>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3 }}>
+        <Typography variant="h3">How Trip8 Works</Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          {TRIP_PROCESS.map(({ label, text }, index) => {
+            return (
+              <Box
+                key={index}
+                sx={{ display: "flex", gap: 1, alignItems: "center" }}
+              >
+                <Typography
+                  variant="h1"
+                  sx={{
+                    minWidth: 60,
+                    textAlign: "left",
+                    color: theme.palette.primary.main,
+                  }}
+                >
+                  {index < 10 ? "0" + (index + 1) : index + 1}
+                </Typography>
+                <Box
+                  sx={{
+                    boxShadow: `2px 2px 16px 0 ${lighten(
+                      theme.palette.text.secondary,
+                      0.7
+                    )}`,
+                    borderRadius: 2,
+                    p: 2,
+                    flex: 1,
+                  }}
+                >
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    {label}
+                  </Typography>
+                  <TripStyledSubText>{text}</TripStyledSubText>
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      </Box>
+
+      <Box sx={{ mt: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Meghalaya Itineraries
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            overflowX: "auto",
+            pb: 2,
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
+              <TripCard date={"10 oct 2025"} duration="5D/6N" place="Asssam" />
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Container>
   );

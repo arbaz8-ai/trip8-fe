@@ -75,7 +75,13 @@ const CardTag = ({ label, Icon }: { label: React.ReactNode; Icon: any }) => {
   );
 };
 
-const TripCard = () => {
+interface TripCardProps {
+  place?: string;
+  duration?: string;
+  date?: string | Date;
+}
+
+const TripCard = ({ date, duration, place }: TripCardProps) => {
   const { imgSrc, label, price } = getRandomImageItem(0);
   return (
     <Card
@@ -108,7 +114,7 @@ const TripCard = () => {
           <Box
             sx={{
               position: "relative",
-              height: 160,
+              height: 170,
               width: "100%",
               flexShrink: 0,
             }}
@@ -136,12 +142,16 @@ const TripCard = () => {
                 gap: 0.5,
               }}
             >
-              <Box>
-                <CardTag label="Assam" Icon={LocationOnOutlinedIcon} />
-              </Box>
-              <Box>
-                <CardTag label="6N/5D" Icon={LocationOnOutlinedIcon} />
-              </Box>
+              {place && (
+                <Box>
+                  <CardTag label="Assam" Icon={LocationOnOutlinedIcon} />
+                </Box>
+              )}
+              {duration && (
+                <Box>
+                  <CardTag label="6N/5D" Icon={LocationOnOutlinedIcon} />
+                </Box>
+              )}
               <Box
                 sx={{
                   flex: 1,
@@ -150,7 +160,9 @@ const TripCard = () => {
                   justifyContent: "flex-end",
                 }}
               >
-                <CardTag label="10 Dec 24" Icon={LocationOnOutlinedIcon} />
+                {date && (
+                  <CardTag label="10 Dec 24" Icon={LocationOnOutlinedIcon} />
+                )}
               </Box>
             </Box>
           </Box>

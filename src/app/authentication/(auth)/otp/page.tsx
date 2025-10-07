@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 
 import Link from "next/link";
 import OTPInput from "./Otp";
+import { postSignin } from "@/tripAPI/auth";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const OtpPage = () => {
@@ -17,7 +19,20 @@ const OtpPage = () => {
 
   const router = useRouter();
 
-  const onSubmit = async () => {};
+  const { mutate: onComplete, isPending } = useMutation({
+    mutationKey: ["signin"],
+    mutationFn: async (values: Parameters<typeof postSignin>[0]) => {
+      const response = await postSignin(values);
+      console.log({ response });
+      return response;
+    },
+    onSuccess: (data) => {
+      const { access_token } = data ?? {};
+      localStorage.setItem("token", access_token);
+      router.push("/home");
+    },
+  });
+
   return (
     <Container
       maxWidth={"sm"}
@@ -53,9 +68,7 @@ const OtpPage = () => {
         >
           <OTPInput
             onComplete={(value) => {
-              if (value === "1234") {
-                router.push("/authentication/register");
-              }
+              onComplete({ mobile_email: number ?? "", otp: value });
             }}
           />
         </Box>
@@ -65,7 +78,7 @@ const OtpPage = () => {
           variant="contained"
           fullWidth
           sx={{ borderRadius: 2, py: 1.2, fontWeight: "bold", mb: 1 }}
-          onClick={onSubmit}
+          disabled={isPending}
         >
           Continue
         </Button>
