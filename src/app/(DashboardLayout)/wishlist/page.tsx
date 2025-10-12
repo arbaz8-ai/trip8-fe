@@ -3,9 +3,7 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 
-// import CheckboxField from "@/components/checkboxField/CheckboxField";
 import CounterField from "@/components/counterField/CounterField";
-// import RadioField from "@/components/radioField/RadioField";
 import React from "react";
 import TripCard from "../components/tripCard/TripCard";
 
