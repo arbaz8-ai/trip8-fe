@@ -5,8 +5,6 @@ import React, { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-// import { usePathname, useRouter } from "next/navigation";
-
 const MainWrapper = styled("div")(() => ({
   display: "flex",
   minHeight: "100vh",
@@ -21,19 +19,10 @@ export default function RootLayout({
   const [loader, setLoader] = useState<boolean>(true);
   const router = useRouter();
 
-  // const PUBLIC_ROUTES = [
-  //   "/authentication/login",
-  //   "/authentication/register",
-  //   "/authentication/otp",
-  // ];
-
   useEffect(() => {
     const checkAuth = () => {
       try {
         const token = localStorage.getItem("token");
-        // const isPublicRoute = PUBLIC_ROUTES.some((route) =>
-        //   pathname.startsWith(route)
-        // );
 
         if (!token) {
           console.log("No token found, redirecting to login");
