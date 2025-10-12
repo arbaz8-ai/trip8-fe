@@ -4,7 +4,7 @@ import Image, { StaticImageData } from "next/image";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import React from "react";
 import { TripStyledText } from "@/components/typography/TripTypography";
-import imageSrc1 from "../../../../../public/images/products/s11.jpg";
+// import imageSrc1 from "../../../../../public/images/products/s11.jpg";
 import imageSrc2 from "../../../../../public/images/products/s4.jpg";
 import imageSrc3 from "../../../../../public/images/products/s5.jpg";
 import imageSrc4 from "../../../../../public/images/products/s7.jpg";
@@ -15,37 +15,32 @@ interface ImageItem {
   label: string;
   text: string;
   id?: number;
-  price: number;
 }
 
 const imageData: ImageItem[] = [
   {
     id: 1,
-    imgSrc: imageSrc1,
+    imgSrc: imageSrc2,
     label: "Assam Trip",
     text: "Peaceful trip to Assam",
-    price: 40000,
   },
   {
     id: 2,
     imgSrc: imageSrc2,
     label: "Kerala Backwaters",
     text: "Experience the serene backwaters",
-    price: 20000,
   },
   {
     id: 3,
     imgSrc: imageSrc3,
     label: "Himalayan Trek",
     text: "Adventure in the mighty Himalayas",
-    price: 12000,
   },
   {
     id: 4,
     imgSrc: imageSrc4,
     label: "Goa Beach",
     text: "Relaxing beach vacation in Goa",
-    price: 23000,
   },
 ];
 
@@ -79,10 +74,18 @@ interface TripCardProps {
   place?: string;
   duration?: string;
   date?: string | Date;
+  price?: number;
+  destination?: string;
 }
 
-const TripCard = ({ date, duration, place }: TripCardProps) => {
-  const { imgSrc, label, price } = getRandomImageItem(0);
+const TripCard = ({
+  date,
+  duration,
+  place,
+  price,
+  destination,
+}: TripCardProps) => {
+  const { imgSrc } = getRandomImageItem(0);
   return (
     <Card
       sx={{
@@ -137,33 +140,38 @@ const TripCard = ({ date, duration, place }: TripCardProps) => {
                 right: 0,
                 p: 2,
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
                 gap: 0.5,
               }}
             >
               {place && (
                 <Box>
-                  <CardTag label="Assam" Icon={LocationOnOutlinedIcon} />
+                  <CardTag label={place} Icon={LocationOnOutlinedIcon} />
                 </Box>
               )}
               {duration && (
                 <Box>
-                  <CardTag label="6N/5D" Icon={LocationOnOutlinedIcon} />
+                  <CardTag label={duration} Icon={LocationOnOutlinedIcon} />
                 </Box>
               )}
-              <Box
-                sx={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                }}
-              >
-                {date && (
-                  <CardTag label="10 Dec 24" Icon={LocationOnOutlinedIcon} />
-                )}
-              </Box>
+              {date && (
+                <Box
+                  sx={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  {
+                    <CardTag
+                      label={date.toString()}
+                      Icon={LocationOnOutlinedIcon}
+                    />
+                  }
+                </Box>
+              )}
             </Box>
           </Box>
 
@@ -194,7 +202,7 @@ const TripCard = ({ date, duration, place }: TripCardProps) => {
                 fontWeight: 700,
               }}
             >
-              {label}
+              {destination?.toUpperCase() || "ASSAM"} TRIP
             </Typography>
           </Box>
         </Box>

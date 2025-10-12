@@ -10,15 +10,15 @@ const nextConfig = {
   },
   reactStrictMode: true,
   images: { unoptimized: true },
-  async redirects() {
-    return [
-      {
-        source: "/authentication/otp",
-        destination: "/authentication/login",
-        permanent: false,
-      },
-    ];
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/authentication/otp",
+  //       destination: "/authentication/login",
+  //       permanent: false,
+  //     },
+  //   ];
+  // },
 };
 
 module.exports = nextConfig;

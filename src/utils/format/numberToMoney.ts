@@ -1,4 +1,7 @@
-export function numberToINR(amount: number) {
+export function numberToINR(amount?: number) {
+  if (!amount) {
+    return 0;
+  }
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",

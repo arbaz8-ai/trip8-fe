@@ -3,31 +3,31 @@ import * as Yup from "yup";
 import TextField from "@/components/textField/TextField";
 
 export enum fieldNames {
-  fullname = "fullname",
-  number = "number",
+  name = "name",
+  mobile_email = "mobile_email",
   source = "source",
 }
 
-interface FieldValueType {
-  [fieldNames.fullname]: string;
-  [fieldNames.number]: string;
+export interface FieldValueType {
+  [fieldNames.name]: string;
+  [fieldNames.mobile_email]: string;
   [fieldNames.source]: string;
 }
 
 export const fields = [
   {
-    name: fieldNames.fullname,
+    name: fieldNames.name,
     placeholder: "Enter Full Name",
     component: TextField,
     color: "primary",
     label: "Full Name",
   },
   {
-    name: fieldNames.number,
-    placeholder: "Enter WhatsApp Number",
+    name: fieldNames.mobile_email,
+    placeholder: "Enter WhatsApp number",
     component: TextField,
     color: "primary",
-    label: "WhatsApp Number",
+    label: "WhatsApp number",
   },
   {
     name: fieldNames.source,
@@ -46,13 +46,15 @@ export const fields = [
 ];
 
 export const intialValues: FieldValueType = {
-  [fieldNames.fullname]: "",
-  [fieldNames.number]: "",
+  [fieldNames.name]: "",
+  [fieldNames.mobile_email]: "",
   [fieldNames.source]: "",
 };
 
 export const validationSchema = Yup.object({
-  [fieldNames.fullname]: Yup.string().required("Full name is required"),
-  [fieldNames.number]: Yup.string().required("WhatsApp number is required"),
+  [fieldNames.name]: Yup.string().required("Full name is required"),
+  [fieldNames.mobile_email]: Yup.string().required(
+    "WhatsApp number is required"
+  ),
   [fieldNames.source]: Yup.string().required("Source is required"),
 });

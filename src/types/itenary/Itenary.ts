@@ -36,12 +36,12 @@ export interface TripInfo {
 }
 
 export interface ItenaryPayload {
-  starting: string;
-  destination: string;
-  days: number;
-  nights: number;
-  trip_info: TripInfo;
-  price: number;
-  status: "ACTIVE" | "INACTIVE";
-  tags: { name: string; icon: any }[];
+  starting?: string;
+  destination?: string;
+  days?: number;
+  nights?: number;
+  trip_info?: TripInfo;
+  price?: number;
+  status?: "ACTIVE" | "INACTIVE";
+  tags?: { name: string; icon: any }[];
 }

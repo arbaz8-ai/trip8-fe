@@ -4,7 +4,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  FormLabel,
+  Typography,
   lighten,
   useTheme,
 } from "@mui/material";
@@ -46,9 +46,18 @@ const CheckboxField = ({
 
   return (
     <FormControl sx={{ width: "100%" }}>
-      <FormLabel id="checkbox-buttons-group-label">{label}</FormLabel>
+      <Typography
+        id="label"
+        sx={{
+          mb: 2,
+          fontWeight: 700,
+          color: "#000",
+        }}
+      >
+        {label}
+      </Typography>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {options.map(({ label, value }) => {
+        {options?.map(({ label, value }) => {
           const isSelected = currentValues.includes(value);
           return (
             <FormControlLabel

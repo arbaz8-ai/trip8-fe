@@ -11,15 +11,24 @@ import { useRouter } from "next/navigation";
 
 const OtpPage = () => {
   const theme = useTheme();
-  const [number, setNumber] = useState<string | null>(null);
+  const [user, setUser] = useState<any | null>(null);
+
   useEffect(() => {
-    const number = localStorage.getItem("number");
-    setNumber(number);
+    try {
+      const ls = localStorage.getItem("user");
+      if (ls === null) {
+        return;
+      }
+      const parsedUser = JSON.parse(ls);
+      setUser(parsedUser);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const router = useRouter();
 
-  const { mutate: onComplete, isPending } = useMutation({
+  const { mutate: verifyOTP, isPending } = useMutation({
     mutationKey: ["signin"],
     mutationFn: async (values: Parameters<typeof postSignin>[0]) => {
       const response = await postSignin(values);
@@ -29,6 +38,7 @@ const OtpPage = () => {
     onSuccess: (data) => {
       const { access_token } = data ?? {};
       localStorage.setItem("token", access_token);
+      localStorage.removeItem("number");
       router.push("/home");
     },
   });
@@ -48,7 +58,7 @@ const OtpPage = () => {
           A 4 digit code has been sent to your WhatsApp.
         </Typography>
         <Typography sx={{ color: theme.palette.text.secondary, mb: 2 }}>
-          OTP Sent to {number}
+          OTP Sent to {user?.number}
           <Link
             href={{
               pathname: "login",
@@ -68,7 +78,7 @@ const OtpPage = () => {
         >
           <OTPInput
             onComplete={(value) => {
-              onComplete({ mobile_email: number ?? "", otp: value });
+              verifyOTP({ ...user, otp: value });
             }}
           />
         </Box>

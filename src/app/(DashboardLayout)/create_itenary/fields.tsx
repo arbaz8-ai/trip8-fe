@@ -341,6 +341,14 @@ export const fields = [
       rows: 4,
     },
   ],
+  [
+    {
+      name: `${fieldNames.trip_info}.${fieldNames.places}`,
+      label: "Any specific places that you want to include?",
+      color: "primary",
+      component: CheckboxField,
+    },
+  ],
 ];
 
 const tripInfoIntialValues: TripInfoFieldTypes = {

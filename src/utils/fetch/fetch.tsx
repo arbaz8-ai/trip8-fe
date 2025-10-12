@@ -27,11 +27,31 @@ class FetchClient {
     return headers;
   }
 
+  private buildUrl(endpoint: string, params?: Record<string, any>): string {
+    const url = `${this.baseURL}/${endpoint}`;
+
+    if (!params) {
+      return url;
+    }
+
+    const queryParams = new URLSearchParams();
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        queryParams.append(key, value.toString());
+      }
+    });
+
+    const queryString = queryParams.toString();
+    return queryString ? `${url}?${queryString}` : url;
+  }
+
   async request<T = any>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    params?: Record<string, any>
   ): Promise<{ response: Response; data: T }> {
-    const url = `${this.baseURL}/${endpoint}`;
+    const url = this.buildUrl(endpoint, params);
     const headers = await this.getHeaders(options.headers);
 
     const config: RequestInit = {
@@ -43,9 +63,9 @@ class FetchClient {
       const response = await fetch(url, config);
 
       if (response.status === 401) {
-        if (typeof window !== "undefined") {
-          window.location.href = "/authentication/login";
-        }
+        // if (typeof window !== "undefined") {
+        //   window.location.href = "/authentication/login";
+        // }
         throw new Error("Unauthorized");
       }
 
@@ -74,9 +94,14 @@ class FetchClient {
 
   async get<T = any>(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit & { params?: Record<string, any> }
   ): Promise<{ response: Response; data: T }> {
-    return this.request<T>(endpoint, { ...options, method: "GET" });
+    const { params, ...requestOptions } = options || {};
+    return this.request<T>(
+      endpoint,
+      { ...requestOptions, method: "GET" },
+      params
+    );
   }
 
   async post<T = any>(
@@ -105,9 +130,14 @@ class FetchClient {
 
   async delete<T = any>(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit & { params?: Record<string, any> }
   ): Promise<{ response: Response; data: T }> {
-    return this.request<T>(endpoint, { ...options, method: "DELETE" });
+    const { params, ...requestOptions } = options || {};
+    return this.request<T>(
+      endpoint,
+      { ...requestOptions, method: "DELETE" },
+      params
+    );
   }
 
   async patch<T = any>(
@@ -122,7 +152,10 @@ class FetchClient {
     });
   }
 
-  async getData<T = any>(endpoint: string, options?: RequestInit): Promise<T> {
+  async getData<T = any>(
+    endpoint: string,
+    options?: RequestInit & { params?: Record<string, any> }
+  ): Promise<T> {
     const { data } = await this.get<T>(endpoint, options);
     return data;
   }
@@ -147,7 +180,7 @@ class FetchClient {
 
   async deleteData<T = any>(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit & { params?: Record<string, any> }
   ): Promise<T> {
     const { data } = await this.delete<T>(endpoint, options);
     return data;
@@ -166,5 +199,3 @@ class FetchClient {
 const baseURL = `${process.env.NEXT_PUBLIC_API_PROTOCOL}://${process.env.NEXT_PUBLIC_API_HOST}`;
 
 export const tripAPI = new FetchClient(baseURL);
-
-// export const tripAPI = new FetchClient();

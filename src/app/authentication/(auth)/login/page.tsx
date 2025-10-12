@@ -63,11 +63,11 @@ const Login2 = () => {
     mutationFn: async (values: FieldValueType) => {
       const response = await getOTP(values);
 
-      console.log({ response });
+      return response;
     },
-    onSuccess: (_data, { mobile_email }) => {
+    onSuccess: (_data, values) => {
       router.push(`/authentication/otp`);
-      localStorage.setItem("number", mobile_email);
+      localStorage.setItem("user", JSON.stringify(values));
     },
   });
 

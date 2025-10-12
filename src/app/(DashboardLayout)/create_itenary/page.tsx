@@ -10,17 +10,27 @@ import {
   Typography,
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
+import { FieldValueType, fieldNames, fields, intitialValues } from "./fields";
 import React, { useState } from "react";
-import { fields, intitialValues } from "./fields";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
+import Places from "./Places";
 import { TripStyledText } from "@/components/typography/TripTypography";
+import { createItinenary } from "@/tripAPI/itinenary";
+import { getSuggestedPlace } from "@/tripAPI/getSuggestedPlace";
+import { useRouter } from "next/navigation";
 
-const steps = ["Step 1", "Step 2", "Step 3"];
+const steps = ["Step 1", "Step 2", "Step 3", "step 4"];
 
 const CreateItenary = () => {
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState<FieldValueType>(intitialValues);
 
-  const handleNext = () => {
+  const handleNext = (values: FieldValueType) => {
+    if (activeStep === 3) {
+      setFormData(values);
+    }
     setActiveStep((prevStep) => prevStep + 1);
   };
 
@@ -28,7 +38,46 @@ const CreateItenary = () => {
     setActiveStep((prevStep) => prevStep - 1);
   };
 
+  const { mutate: createItinenaryForm, isPending } = useMutation({
+    mutationKey: ["create_itinenary"],
+    mutationFn: async (values: FieldValueType) => {
+      console.log(values);
+      const response = await createItinenary(values);
+      return response;
+    },
+    onSuccess: (data) => {
+      const { _id } = data ?? {};
+      router.push(`/itinenary_details/${_id}`);
+    },
+  });
+
+  const {
+    data: places,
+    isError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["places", formData],
+    queryFn: async () => {
+      const { days, destination, nights, starting, trip_info } = formData ?? {};
+      const response = await getSuggestedPlace({
+        days,
+        destination,
+        nights,
+        starting,
+        trip_info,
+      });
+      const { places } = response ?? {};
+      return places;
+    },
+    enabled: activeStep === 3,
+  });
+
   const isLastStep = activeStep === steps.length - 1;
+
+  const submitForm = async (values: FieldValueType) => {
+    createItinenaryForm(values);
+  };
+
   return (
     <Box sx={{ px: 2, mt: 4 }}>
       <Box sx={{ mb: 2 }}>
@@ -54,19 +103,40 @@ const CreateItenary = () => {
       </Box>
       <Formik
         initialValues={intitialValues}
-        onSubmit={() => {}}
+        onSubmit={submitForm}
         enableReinitialize
       >
-        {({ values, isSubmitting, isValid }) => {
-          console.log(values);
+        {({ isSubmitting, isValid, values }) => {
           return (
             <Form id="form">
               <Grid container spacing={2} sx={{ mt: 2 }}>
-                {fields[activeStep]?.map((item) => (
-                  <Grid size={{ xs: 12, sm: 6 }} key={item.name} mb={2}>
-                    <Field {...item} />
-                  </Grid>
-                ))}
+                {fields[activeStep]?.map((item) => {
+                  if (
+                    item.name === `${fieldNames.trip_info}.${fieldNames.places}`
+                  ) {
+                    return (
+                      <Grid size={{ xs: 12, sm: 6 }} key={item.name} mb={2}>
+                        <Places
+                          item={item}
+                          options={
+                            isError
+                              ? [
+                                  { name: "arbaz", category: [] },
+                                  { name: "alam", category: [] },
+                                ]
+                              : places
+                          }
+                          isLoading={isLoading}
+                        />
+                      </Grid>
+                    );
+                  }
+                  return (
+                    <Grid size={{ xs: 12, sm: 6 }} key={item.name} mb={2}>
+                      <Field {...item} />
+                    </Grid>
+                  );
+                })}
                 <Grid size={{ xs: 6 }}>
                   <Button
                     fullWidth
@@ -83,7 +153,7 @@ const CreateItenary = () => {
                       fullWidth
                       variant="contained"
                       disabled={isSubmitting || !isValid}
-                      onClick={handleNext}
+                      onClick={() => handleNext(values)}
                     >
                       Next
                     </Button>
@@ -95,7 +165,7 @@ const CreateItenary = () => {
                       fullWidth
                       type="submit"
                       variant="contained"
-                      disabled={isSubmitting || !isValid}
+                      disabled={isSubmitting || !isValid || isPending}
                     >
                       {"Create Itinerary"}
                     </Button>

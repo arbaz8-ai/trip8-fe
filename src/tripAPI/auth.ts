@@ -1,4 +1,4 @@
-import { LoginResult } from "@/types/results/Login";
+import { LoginResult } from "@/types/APIResponse/Login";
 import { tripAPI } from "@/utils/fetch/fetch";
 
 export const postSignin = async (body: {
@@ -17,7 +17,12 @@ export const postSignin = async (body: {
   }
 };
 
-export const getOTP = async (body: { mobile_email: string }) => {
+export const getOTP = async (body: {
+  name?: string;
+  mobile_email: string;
+  source?: string;
+  role?: string;
+}) => {
   try {
     const response = await tripAPI.post<any>("auth/otp/send", {
       ...body,
@@ -30,9 +35,16 @@ export const getOTP = async (body: { mobile_email: string }) => {
   }
 };
 
-export const getPosts = async () => {
+export const postSignup = async (body: {
+  name: string;
+  mobile_email: string;
+  source: string;
+  otp: string;
+}) => {
   try {
-    const response = await tripAPI.get<any>("posts");
+    const response = await tripAPI.post<LoginResult>("auth/otp/login", {
+      ...body,
+    });
     const { data } = response ?? {};
     return data;
   } catch (error: any) {
