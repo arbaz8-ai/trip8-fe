@@ -10,11 +10,6 @@ import {
 import { FieldProps, getIn } from "formik";
 import React, { FC } from "react";
 
-// import { TripIconButton } from "../tripButtons/TripIconButton";
-
-// import VisibilityIcon from "@assets/materialIcons/visibility.svg?react";
-// import VisibilityOffIcon from "@assets/materialIcons/visibility_off.svg?react";
-
 interface SelectOption {
   value: string | number;
   label: string;
@@ -26,7 +21,6 @@ interface TextFieldType extends Partial<FieldProps>, BaseTextFieldProps {
   prefix?: string;
   suffix?: string | React.ReactNode;
   options?: Array<SelectOption>;
-  // eslint-disable-next-line no-unused-vars
   onChange?: (value: string) => void;
   InputProps?: Partial<InputBaseProps>;
   textTransform?: "uppercase" | "lowercase" | "";
@@ -51,7 +45,6 @@ const TextField: FC<TextFieldType> = ({
 }) => {
   const { name = "", value } = field || {};
   const { setFieldValue, touched, errors, setFieldTouched } = form || {};
-  //   const [showPassword, setShowPassword] = useState<boolean>(false);
   const theme = useTheme();
 
   const error = getIn(errors, name);
@@ -75,10 +68,6 @@ const TextField: FC<TextFieldType> = ({
     }
     onChange(finalValue);
   };
-
-  //   const handleTogglePasswordShow = () => {
-  //     setShowPassword((prevValue) => !prevValue);
-  //   };
 
   return (
     <MTextField
@@ -143,40 +132,10 @@ const TextField: FC<TextFieldType> = ({
               },
             }
           : {}),
-        // ...(mTextFieldProps.type === "password"
-        //   ? {
-        //       endAdornment: (
-        //         <InputAdornment position="end">
-        //           <TripIconButton
-        //             color="inherit"
-        //             onClick={handleTogglePasswordShow}
-        //           >
-        //             {!showPassword ? (
-        //               <VisibilityIcon
-        //                 width={"1em"}
-        //                 height={"1em"}
-        //                 fill="currentColor"
-        //               />
-        //             ) : (
-        //               <VisibilityOffIcon
-        //                 width={"1em"}
-        //                 height={"1em"}
-        //                 fill="currentColor"
-        //               />
-        //             )}
-        //           </TripIconButton>
-        //         </InputAdornment>
-        //       ),
-        //     }
-        //   : {}),
+
         ...InputProps,
       }}
       {...mTextFieldProps}
-      //   {...(mTextFieldProps.type === "password"
-      //     ? {
-      //         type: showPassword ? "text" : "password",
-      //       }
-      //     : {})}
       {...(mTextFieldProps.select
         ? {
             SelectProps: {

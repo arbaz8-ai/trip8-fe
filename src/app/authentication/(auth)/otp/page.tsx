@@ -5,19 +5,45 @@ import React, { useEffect, useState } from "react";
 
 import Link from "next/link";
 import OTPInput from "./Otp";
+import { postSignin } from "@/tripAPI/auth";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const OtpPage = () => {
   const theme = useTheme();
-  const [number, setNumber] = useState<string | null>(null);
+  const [user, setUser] = useState<any | null>(null);
+
   useEffect(() => {
-    const number = localStorage.getItem("number");
-    setNumber(number);
+    try {
+      const ls = localStorage.getItem("user");
+      if (ls === null) {
+        return;
+      }
+      const parsedUser = JSON.parse(ls);
+      setUser(parsedUser);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const router = useRouter();
 
-  const onSubmit = async () => {};
+  const { mutate: verifyOTP, isPending } = useMutation({
+    mutationKey: ["signin"],
+    mutationFn: async (values: Parameters<typeof postSignin>[0]) => {
+      const response = await postSignin(values);
+      console.log({ response });
+      return response;
+    },
+    onSuccess: (data) => {
+      const { access_token, refresh_token } = data ?? {};
+      localStorage.setItem("token", access_token);
+      localStorage.setItem("refreshToken", refresh_token);
+      localStorage.removeItem("number");
+      router.push("/home");
+    },
+  });
+
   return (
     <Container
       maxWidth={"sm"}
@@ -33,7 +59,7 @@ const OtpPage = () => {
           A 4 digit code has been sent to your WhatsApp.
         </Typography>
         <Typography sx={{ color: theme.palette.text.secondary, mb: 2 }}>
-          OTP Sent to {number}
+          OTP Sent to {user?.number}
           <Link
             href={{
               pathname: "login",
@@ -53,9 +79,7 @@ const OtpPage = () => {
         >
           <OTPInput
             onComplete={(value) => {
-              if (value === "1234") {
-                router.push("/authentication/register");
-              }
+              verifyOTP({ ...user, otp: value });
             }}
           />
         </Box>
@@ -65,7 +89,7 @@ const OtpPage = () => {
           variant="contained"
           fullWidth
           sx={{ borderRadius: 2, py: 1.2, fontWeight: "bold", mb: 1 }}
-          onClick={onSubmit}
+          disabled={isPending}
         >
           Continue
         </Button>

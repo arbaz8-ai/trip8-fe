@@ -1,57 +1,53 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
 
+import Heart_black from "@/assets/icons/black_heart.svg";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import React from "react";
 import { TripStyledText } from "@/components/typography/TripTypography";
-import imageSrc1 from "../../../../../public/images/products/s11.jpg";
 import imageSrc2 from "../../../../../public/images/products/s4.jpg";
 import imageSrc3 from "../../../../../public/images/products/s5.jpg";
 import imageSrc4 from "../../../../../public/images/products/s7.jpg";
 import { numberToINR } from "@/utils/format/numberToMoney";
+import { saveTripToWishlist } from "@/tripAPI/trips";
+import { useMutation } from "@tanstack/react-query";
 
 interface ImageItem {
   imgSrc: StaticImageData;
   label: string;
   text: string;
   id?: number;
-  price: number;
 }
 
 const imageData: ImageItem[] = [
   {
     id: 1,
-    imgSrc: imageSrc1,
+    imgSrc: imageSrc2,
     label: "Assam Trip",
     text: "Peaceful trip to Assam",
-    price: 40000,
   },
   {
     id: 2,
     imgSrc: imageSrc2,
     label: "Kerala Backwaters",
     text: "Experience the serene backwaters",
-    price: 20000,
   },
   {
     id: 3,
     imgSrc: imageSrc3,
     label: "Himalayan Trek",
     text: "Adventure in the mighty Himalayas",
-    price: 12000,
   },
   {
     id: 4,
     imgSrc: imageSrc4,
     label: "Goa Beach",
     text: "Relaxing beach vacation in Goa",
-    price: 23000,
   },
 ];
 
 export const getRandomImageItem = (index: number): ImageItem => {
-  //   const randomIndex = Math.floor(Math.random() * imageData.length);
-  return { ...imageData[index] }; // Return copy to avoid mutation
+  return { ...imageData[index] };
 };
 
 const CardTag = ({ label, Icon }: { label: React.ReactNode; Icon: any }) => {
@@ -75,8 +71,31 @@ const CardTag = ({ label, Icon }: { label: React.ReactNode; Icon: any }) => {
   );
 };
 
-const TripCard = () => {
-  const { imgSrc, label, price } = getRandomImageItem(0);
+interface TripCardProps {
+  place?: string;
+  duration?: string;
+  date?: Date | string;
+  price?: number;
+  destination?: string;
+  id: string;
+}
+
+const TripCard = ({
+  date,
+  duration,
+  place,
+  price,
+  destination,
+  id,
+}: TripCardProps) => {
+  const { imgSrc } = getRandomImageItem(0);
+  const { mutate: saveToWishList } = useMutation({
+    mutationKey: ["save_to_wishlist"],
+    mutationFn: async (id: string) => {
+      const response = await saveTripToWishlist({ id });
+      return response;
+    },
+  });
   return (
     <Card
       sx={{
@@ -108,7 +127,7 @@ const TripCard = () => {
           <Box
             sx={{
               position: "relative",
-              height: 160,
+              height: 170,
               width: "100%",
               flexShrink: 0,
             }}
@@ -131,26 +150,45 @@ const TripCard = () => {
                 right: 0,
                 p: 2,
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
+                justifyContent: "flex-end",
+                alignItems: "center",
                 gap: 0.5,
               }}
             >
-              <Box>
-                <CardTag label="Assam" Icon={LocationOnOutlinedIcon} />
-              </Box>
-              <Box>
-                <CardTag label="6N/5D" Icon={LocationOnOutlinedIcon} />
-              </Box>
+              {place && (
+                <Box>
+                  <CardTag label={place} Icon={LocationOnOutlinedIcon} />
+                </Box>
+              )}
+              {duration && (
+                <Box>
+                  <CardTag label={duration} Icon={LocationOnOutlinedIcon} />
+                </Box>
+              )}
+              {date && (
+                <Box
+                  sx={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  {
+                    <CardTag
+                      label={new Date(date).toISOString()}
+                      Icon={LocationOnOutlinedIcon}
+                    />
+                  }
+                </Box>
+              )}
               <Box
-                sx={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
+                onClick={(e) => {
+                  e.stopPropagation();
+                  saveToWishList(id);
                 }}
               >
-                <CardTag label="10 Dec 24" Icon={LocationOnOutlinedIcon} />
+                <Heart_black />
               </Box>
             </Box>
           </Box>
@@ -182,7 +220,7 @@ const TripCard = () => {
                 fontWeight: 700,
               }}
             >
-              {label}
+              {destination?.toUpperCase() || "ASSAM"} TRIP
             </Typography>
           </Box>
         </Box>

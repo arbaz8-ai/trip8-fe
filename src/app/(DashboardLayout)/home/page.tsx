@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Button, Container, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  lighten,
+  useTheme,
+} from "@mui/material";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -9,9 +16,56 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import React from "react";
 import TripCard from "../components/tripCard/TripCard";
 import { TripStyledSubText } from "@/components/typography/TripTypography";
+import { getProfile } from "@/tripAPI/user";
+import { getTrips } from "@/tripAPI/itinenary";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
+const TRIP_PROCESS = [
+  {
+    label: "Tell Us Where You Want to Go & What you Prefer",
+    text: "Enter your trip details — dates, destinations, preferences.",
+  },
+  {
+    label: "Tell Us Where You Want to Go & What you Prefer",
+    text: "Enter your trip details — dates, destinations, preferences.",
+  },
+  {
+    label: "Tell Us Where You Want to Go & What you Prefer",
+    text: "Enter your trip details — dates, destinations, preferences.",
+  },
+  {
+    label: "Tell Us Where You Want to Go & What you Prefer",
+    text: "Enter your trip details — dates, destinations, preferences.",
+  },
+];
 const HomePage = () => {
   const theme = useTheme();
+  const router = useRouter();
+
+  const { data: itinenariesList } = useQuery({
+    queryKey: ["itinenaries"],
+    queryFn: async () => {
+      const response = await getTrips();
+      const { data } = response ?? {};
+      return data;
+    },
+  });
+
+  const { data: profileData } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const response = await getProfile();
+      return response;
+    },
+  });
+
+  const redirectToDetailTrip = (id: string) => {
+    router.push(`trip_details/${id}`);
+  };
+
+  const { name } = profileData ?? {};
+
   return (
     <Container
       maxWidth="xl"
@@ -26,7 +80,7 @@ const HomePage = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Typography variant="h6">Good Morning, Deepak</Typography>
+          <Typography variant="h6">Good Morning, {name}</Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <LocationOnIcon sx={{ height: 24, width: 24 }} color="primary" />
@@ -88,39 +142,18 @@ const HomePage = () => {
               py: 1,
               minWidth: "auto",
             }}
+            onClick={() => {
+              router.push("/create_itenary");
+            }}
           >
             Create itinerary quickly
           </Button>
         </Box>
       </Box>
-      <Box sx={{ mt: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Upcoming trips
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            overflowX: "auto",
-            pb: 2,
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
-        >
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard />
-            </Box>
-          ))}
-        </Box>
-      </Box>
 
       <Box sx={{ mt: 3 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Recently Viewed Itineraries
+          All Trips
         </Typography>
         <Box
           sx={{
@@ -135,38 +168,38 @@ const HomePage = () => {
             scrollbarWidth: "none",
           }}
         >
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard />
-            </Box>
-          ))}
+          {itinenariesList?.map((item) => {
+            const {
+              days,
+              nights,
+              itineraries,
+              destination,
+              _id: tripID,
+            } = item ?? {};
+            const { location, _id: itinenaryID } = itineraries ?? {};
+            const CITY = location.split(",")[0];
+            return (
+              <Box
+                key={tripID}
+                sx={{ minWidth: 240, flexShrink: 0, cursor: "pointer" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  redirectToDetailTrip(itinenaryID);
+                }}
+              >
+                <TripCard
+                  id={tripID}
+                  // date={"10 oct 2025"}
+                  destination={destination}
+                  duration={`${days}D/${nights}N`}
+                  place={`${CITY}`}
+                />
+              </Box>
+            );
+          })}
         </Box>
       </Box>
 
-      <Box sx={{ mt: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Trending Itineraries
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            overflowX: "auto",
-            pb: 2,
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
-        >
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard />
-            </Box>
-          ))}
-        </Box>
-      </Box>
       <Box
         sx={{
           p: 2,
@@ -182,6 +215,76 @@ const HomePage = () => {
           gives you access to the most authentic and affordable trips in this
           magical region.
         </TripStyledSubText>
+      </Box>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3 }}>
+        <Typography variant="h3">How Trip8 Works</Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          {TRIP_PROCESS.map(({ label, text }, index) => {
+            return (
+              <Box
+                key={index}
+                sx={{ display: "flex", gap: 1, alignItems: "center" }}
+              >
+                <Typography
+                  variant="h1"
+                  sx={{
+                    minWidth: 60,
+                    textAlign: "left",
+                    color: theme.palette.primary.main,
+                  }}
+                >
+                  {index < 10 ? "0" + (index + 1) : index + 1}
+                </Typography>
+                <Box
+                  sx={{
+                    boxShadow: `2px 2px 16px 0 ${lighten(
+                      theme.palette.text.secondary,
+                      0.7
+                    )}`,
+                    borderRadius: 2,
+                    p: 2,
+                    flex: 1,
+                  }}
+                >
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    {label}
+                  </Typography>
+                  <TripStyledSubText>{text}</TripStyledSubText>
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      </Box>
+
+      <Box sx={{ mt: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Meghalaya Itineraries
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            overflowX: "auto",
+            pb: 2,
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
+              <TripCard
+                id={String(index)}
+                date={"10 oct 2025"}
+                duration="5D/6N"
+                place="Asssam"
+              />
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Container>
   );

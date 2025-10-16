@@ -11,22 +11,42 @@ import {
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import {
+  FieldValueType,
+  fields,
+  intialValues,
+  validationSchema,
+} from "./fields";
+import {
   SubHeader,
   TripStyledText,
 } from "@/components/typography/TripTypography";
-import { fields, intialValues, validationSchema } from "./fields";
 
 import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
-// import AuthRegister from "../../auth/AuthRegister";
-// import Link from "next/link";
-// import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
-// import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import React from "react";
+import { getOTP } from "@/tripAPI/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
-  const isPending = false;
   const theme = useTheme();
+  const router = useRouter();
+  const { mutate: onSignup, isPending } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: async (values: FieldValueType) => {
+      const response = await getOTP({ ...values, role: "USER" });
+      return response;
+    },
+    onSuccess: (data, values) => {
+      router.push("/authentication/otp");
+      localStorage.setItem("user", JSON.stringify(values));
+    },
+  });
+
+  const submitForm = async (values: FieldValueType) => {
+    onSignup(values);
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 6 }}>
       <Typography variant="h3">Create New Account</Typography>
@@ -34,7 +54,7 @@ const Register = () => {
         Fill the following to create an account on Trip8
       </SubHeader>
       <Formik
-        onSubmit={() => {}}
+        onSubmit={submitForm}
         enableReinitialize
         initialValues={intialValues}
         validationSchema={validationSchema}
@@ -112,91 +132,5 @@ const Register = () => {
     </Container>
   );
 };
-
-// <PageContainer title="Register" description="this is Register page">
-//   <Box
-//     sx={{
-//       position: "relative",
-//       "&:before": {
-//         content: '""',
-//         background: "radial-gradient(#d2f1df, #d3d7fa, #bad8f4)",
-//         backgroundSize: "400% 400%",
-//         animation: "gradient 15s ease infinite",
-//         position: "absolute",
-//         height: "100%",
-//         width: "100%",
-//         opacity: "0.3",
-//       },
-//     }}
-//   >
-//     <Grid
-//       container
-//       spacing={0}
-//       justifyContent="center"
-//       sx={{ height: "100vh" }}
-//     >
-//       <Grid
-//         display="flex"
-//         justifyContent="center"
-//         alignItems="center"
-//         size={{
-//           xs: 12,
-//           sm: 12,
-//           lg: 4,
-//           xl: 3,
-//         }}
-//       >
-//         <Card
-//           elevation={9}
-//           sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
-//         >
-//           <Box display="flex" alignItems="center" justifyContent="center">
-//             <Logo />
-//           </Box>
-//           <AuthRegister
-//             subtext={
-//               <Typography
-//                 variant="subtitle1"
-//                 textAlign="center"
-//                 color="textSecondary"
-//                 mb={1}
-//               >
-//                 Your Social Campaigns
-//               </Typography>
-//             }
-//             subtitle={
-//               <Stack
-//                 direction="row"
-//                 justifyContent="center"
-//                 spacing={1}
-//                 mt={3}
-//               >
-//                 <Typography
-//                   color="textSecondary"
-//                   variant="h6"
-//                   fontWeight="400"
-//                 >
-//                   Already have an Account?
-//                 </Typography>
-//                 <Typography
-//                   component={Link}
-//                   href="/authentication/login"
-//                   fontWeight="500"
-//                   sx={{
-//                     textDecoration: "none",
-//                     color: "primary.main",
-//                   }}
-//                 >
-//                   Sign In
-//                 </Typography>
-//               </Stack>
-//             }
-//           />
-//         </Card>
-//       </Grid>
-//     </Grid>
-//   </Box>
-// </PageContainer>
-// );
 
 export default Register;

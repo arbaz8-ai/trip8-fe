@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 
 interface OTPProps {
   length?: number;
-  // eslint-disable-next-line no-unused-vars
   onComplete?: (value: string) => void;
   type?: "text" | "password";
   autoFocus?: boolean;

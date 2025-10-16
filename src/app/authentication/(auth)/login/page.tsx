@@ -12,29 +12,26 @@ import {
   useTheme,
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-// import AuthLogin from "../auth/AuthLogin";
-// import Link from "next/link";
-// import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
-// import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import React, { useEffect, useState } from "react";
 
 import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
 import TextField from "@/components/textField/TextField";
+import { getOTP } from "@/tripAPI/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 enum fieldNames {
-  number = "number",
+  mobile_email = "mobile_email",
 }
 
 interface FieldValueType {
-  [fieldNames.number]: string;
+  [fieldNames.mobile_email]: string;
 }
 
 const fields = [
   {
-    name: fieldNames.number,
+    name: fieldNames.mobile_email,
     placeholder: "Enter WhatsApp Number",
     component: TextField,
     color: "primary",
@@ -43,11 +40,11 @@ const fields = [
 ];
 
 const intialValues: FieldValueType = {
-  [fieldNames.number]: "",
+  [fieldNames.mobile_email]: "",
 };
 
 const validationSchema = Yup.object({
-  [fieldNames.number]: Yup.string().required(),
+  [fieldNames.mobile_email]: Yup.string().required(),
 });
 
 const Login2 = () => {
@@ -64,19 +61,13 @@ const Login2 = () => {
   const { mutate: loginForm, isPending } = useMutation({
     mutationKey: ["signin"],
     mutationFn: async (values: FieldValueType) => {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        }
-      );
-      return response.json();
+      const response = await getOTP(values);
+
+      return response;
     },
-    onSuccess: (_data, { number }) => {
+    onSuccess: (_data, values) => {
       router.push(`/authentication/otp`);
-      localStorage.setItem("number", number);
+      localStorage.setItem("user", JSON.stringify(values));
     },
   });
 
@@ -84,37 +75,6 @@ const Login2 = () => {
     loginForm(values);
   };
   return (
-    // <Box
-    //   sx={{
-    //     height: "100vh",
-    //     display: "flex",
-    //     flexDirection: "column",
-    //   }}
-    // >
-    //   <Box
-    //     minHeight={"30vh"}
-    //     width={"100%"}
-    //     sx={{
-    //       display: "flex",
-    //       alignItems: "end",
-    //       justifyContent: { xs: "start", md: "center" },
-    //     }}
-    //   >
-    //     <Typography
-    //       textAlign="center"
-    //       sx={{
-    //         fontSize: 34,
-    //         textAlign: "start",
-    //         lineHeight: 1,
-    //         ml: { xs: 2, md: 0 },
-    //         color: theme.palette.grey[400],
-    //         fontWeight: 700,
-    //       }}
-    //       gutterBottom
-    //     >
-    //       TRIP PLANNING SIMPLIFIED
-    //     </Typography>
-    //   </Box>
     <Box sx={{ flex: 1, width: "100%" }}>
       <Container
         maxWidth={"sm"}
@@ -133,7 +93,7 @@ const Login2 = () => {
           </Typography>
 
           <Formik
-            initialValues={!!number ? { number } : intialValues}
+            initialValues={!!number ? { mobile_email: number } : intialValues}
             validationSchema={validationSchema}
             onSubmit={submitForm}
             enableReinitialize
@@ -217,91 +177,6 @@ const Login2 = () => {
         </>
       </Container>
     </Box>
-    // </Box>
-    // <PageContainer title="Login" description="this is Login page">
-    //   <Box
-    //     sx={{
-    //       position: "relative",
-    //       "&:before": {
-    //         content: '""',
-    //         background: "radial-gradient(#d2f1df, #d3d7fa, #bad8f4)",
-    //         backgroundSize: "400% 400%",
-    //         animation: "gradient 15s ease infinite",
-    //         position: "absolute",
-    //         height: "100%",
-    //         width: "100%",
-    //         opacity: "0.3",
-    //       },
-    //     }}
-    //   >
-    //     <Grid
-    //       container
-    //       spacing={0}
-    //       justifyContent="center"
-    //       sx={{ height: "100vh" }}
-    //     >
-    //       <Grid
-    //         display="flex"
-    //         justifyContent="center"
-    //         alignItems="center"
-    //         size={{
-    //           xs: 12,
-    //           sm: 12,
-    //           lg: 4,
-    //           xl: 3,
-    //         }}
-    //       >
-    //         <Card
-    //           elevation={9}
-    //           sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
-    //         >
-    //           <Box display="flex" alignItems="center" justifyContent="center">
-    //             <Logo />
-    //           </Box>
-    //           <AuthLogin
-    //             subtext={
-    //               <Typography
-    //                 variant="subtitle1"
-    //                 textAlign="center"
-    //                 color="textSecondary"
-    //                 mb={1}
-    //               >
-    //                 Your Social Campaigns
-    //               </Typography>
-    //             }
-    //             subtitle={
-    //               <Stack
-    //                 direction="row"
-    //                 spacing={1}
-    //                 justifyContent="center"
-    //                 mt={3}
-    //               >
-    //                 <Typography
-    //                   color="textSecondary"
-    //                   variant="h6"
-    //                   fontWeight="500"
-    //                 >
-    //                   New to Modernize?
-    //                 </Typography>
-    //                 <Typography
-    //                   component={Link}
-    //                   href="/authentication/register"
-    //                   fontWeight="500"
-    //                   sx={{
-    //                     textDecoration: "none",
-    //                     color: "primary.main",
-    //                   }}
-    //                 >
-    //                   Create an account
-    //                 </Typography>
-    //               </Stack>
-    //             }
-    //           />
-    //         </Card>
-    //       </Grid>
-    //     </Grid>
-    //   </Box>
-    // </PageContainer>
   );
 };
 export default Login2;

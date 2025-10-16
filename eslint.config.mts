@@ -14,8 +14,11 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: globals.browser },
     rules: {
+      "no-undef": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "no-extra-boolean-cast": "off",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error"],
     },
   },
 

@@ -22,6 +22,7 @@
     "apexcharts": "4.7.0",
     "dotenv": "^17.2.1",
     "formik": "^2.4.6",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "next": "^15.1.7",
     "react": "19.1.0",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@svgr/webpack": "^8.1.0",
     "@tanstack/eslint-plugin-query": "^5.90.1",
     "@types/lodash": "4.14.196",
     "@types/react-syntax-highlighter": "^15.5.13",
