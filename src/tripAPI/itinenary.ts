@@ -1,19 +1,19 @@
 import {
   CreateItinenaryAPIResponse,
-  ItinenaryAPIResponse,
   ItineraryType,
+  TripAPIResponse,
 } from "@/types/APIResponse/Itinenary";
 
 import { ItenaryPayload } from "@/types/itenary/Itenary";
 import { tripAPI } from "@/utils/fetch/fetch";
 
-export const getItinenaries = async (params?: {
+export const getTrips = async (params?: {
   location?: string;
   page?: number;
   limit?: number;
 }) => {
   try {
-    const response = await tripAPI.get<ItinenaryAPIResponse>("trip", {
+    const response = await tripAPI.get<TripAPIResponse>("trip", {
       params,
     });
     const { data } = response ?? {};

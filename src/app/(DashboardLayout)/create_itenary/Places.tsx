@@ -1,6 +1,7 @@
+import React, { memo } from "react";
+
 import { CircularProgress } from "@mui/material";
 import { Field } from "formik";
-import React from "react";
 
 interface PlacesProps {
   options?: {
@@ -26,4 +27,4 @@ const Places = ({ options, item, isLoading = false }: PlacesProps) => {
   );
 };
 
-export default Places;
+export default memo(Places);

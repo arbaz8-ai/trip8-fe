@@ -10,7 +10,7 @@ export const getSuggestedPlace = async (
 ) => {
   try {
     const response = await tripAPI.post<APIPlaceResponse>(
-      "itinerary/suggested-places",
+      "trip/suggested-places",
       {
         ...body,
       }

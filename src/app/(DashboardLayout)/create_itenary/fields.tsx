@@ -204,12 +204,12 @@ export const fields = [
       label: "Travelling with Kids?",
       options: [
         {
-          label: "Relaxed",
-          value: "RELAXED",
+          label: "Yes",
+          value: "YES",
         },
         {
-          label: "Balanced",
-          value: "BALANCED",
+          label: "No",
+          value: "NO",
         },
       ],
     },

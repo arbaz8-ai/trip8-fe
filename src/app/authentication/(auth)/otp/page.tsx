@@ -36,8 +36,9 @@ const OtpPage = () => {
       return response;
     },
     onSuccess: (data) => {
-      const { access_token } = data ?? {};
+      const { access_token, refresh_token } = data ?? {};
       localStorage.setItem("token", access_token);
+      localStorage.setItem("refreshToken", refresh_token);
       localStorage.removeItem("number");
       router.push("/home");
     },

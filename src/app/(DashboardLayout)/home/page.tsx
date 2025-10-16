@@ -16,8 +16,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import React from "react";
 import TripCard from "../components/tripCard/TripCard";
 import { TripStyledSubText } from "@/components/typography/TripTypography";
-import { getItinenaries } from "@/tripAPI/itinenary";
 import { getProfile } from "@/tripAPI/user";
+import { getTrips } from "@/tripAPI/itinenary";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -46,7 +46,7 @@ const HomePage = () => {
   const { data: itinenariesList } = useQuery({
     queryKey: ["itinenaries"],
     queryFn: async () => {
-      const response = await getItinenaries();
+      const response = await getTrips();
       const { data } = response ?? {};
       return data;
     },
@@ -59,6 +59,10 @@ const HomePage = () => {
       return response;
     },
   });
+
+  const redirectToDetailTrip = (id: string) => {
+    router.push(`trip_details/${id}`);
+  };
 
   const { name } = profileData ?? {};
 
@@ -165,12 +169,26 @@ const HomePage = () => {
           }}
         >
           {itinenariesList?.map((item) => {
-            const { days, nights, itineraries, _id, destination } = item ?? {};
-            const { location } = itineraries ?? {};
+            const {
+              days,
+              nights,
+              itineraries,
+              destination,
+              _id: tripID,
+            } = item ?? {};
+            const { location, _id: itinenaryID } = itineraries ?? {};
             const CITY = location.split(",")[0];
             return (
-              <Box key={_id} sx={{ minWidth: 240, flexShrink: 0 }}>
+              <Box
+                key={tripID}
+                sx={{ minWidth: 240, flexShrink: 0, cursor: "pointer" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  redirectToDetailTrip(itinenaryID);
+                }}
+              >
                 <TripCard
+                  id={tripID}
                   // date={"10 oct 2025"}
                   destination={destination}
                   duration={`${days}D/${nights}N`}
@@ -179,11 +197,6 @@ const HomePage = () => {
               </Box>
             );
           })}
-          {/* {Array.from({ length: 10 }).map((_, index) => (
-            <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard date={"10 oct 2025"} duration="5D/6N" place="Asssam" />
-            </Box>
-          ))} */}
         </Box>
       </Box>
 
@@ -263,7 +276,12 @@ const HomePage = () => {
         >
           {Array.from({ length: 10 }).map((_, index) => (
             <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard date={"10 oct 2025"} duration="5D/6N" place="Asssam" />
+              <TripCard
+                id={String(index)}
+                date={"10 oct 2025"}
+                duration="5D/6N"
+                place="Asssam"
+              />
             </Box>
           ))}
         </Box>

@@ -1,13 +1,22 @@
 "use client";
 
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { Field, Form, Formik } from "formik";
+import { Button, Container, Grid, Typography } from "@mui/material";
+import React, { useState } from "react";
 
-import CounterField from "@/components/counterField/CounterField";
-import React from "react";
-import TripCard from "../components/tripCard/TripCard";
+import CreatedTrips from "./CreatedTrips";
+import SavedrTrips from "./SavedTrips";
+
+const TabSwitcher = ({ index }: { index: number }) => {
+  switch (index) {
+    case 1:
+      return <CreatedTrips />;
+    case 0:
+      return <SavedrTrips />;
+  }
+};
 
 const page = () => {
+  const [selectedTab, setSelectedTab] = useState<number>(0);
   return (
     <Container maxWidth="xl">
       <Typography variant="h3" sx={{ my: 2 }}>
@@ -16,49 +25,34 @@ const page = () => {
       <Grid container spacing={2} sx={{ mb: 2 }}>
         <Grid size={{ xs: 6 }}>
           <Button
-            variant="contained"
+            variant={selectedTab === 0 ? "contained" : "outlined"}
             fullWidth
             sx={{
               borderRadius: 2,
               height: 48,
               fontWeight: 500,
             }}
+            onClick={() => setSelectedTab(0)}
           >
             Saved
           </Button>
         </Grid>
         <Grid size={{ xs: 6 }}>
           <Button
-            variant="outlined"
+            variant={selectedTab === 1 ? "contained" : "outlined"}
             fullWidth
             sx={{
               borderRadius: 2,
               height: 48,
               fontWeight: 500,
             }}
+            onClick={() => setSelectedTab(1)}
           >
             Creates
           </Button>
         </Grid>
       </Grid>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {Array.from({ length: 10 }).map((_, index) => (
-          <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-            <TripCard />
-          </Box>
-        ))}
-      </Box>
-
-      <Formik initialValues={{ gender: "" }} onSubmit={() => {}}>
-        {({ values }) => {
-          console.log({ values });
-          return (
-            <Form id="form">
-              <Field name={"gender"} component={CounterField} />
-            </Form>
-          );
-        }}
-      </Formik>
+      <TabSwitcher index={selectedTab} />
     </Container>
   );
 };

@@ -24,7 +24,7 @@ export interface ItineraryType {
   _id: string;
 }
 
-export interface Itinenary {
+export interface Trip {
   _id: string;
   starting: string;
   destination: string;
@@ -36,8 +36,8 @@ export interface Itinenary {
   modified_at: string;
 }
 
-export interface ItinenaryAPIResponse {
-  data: Itinenary[];
+export interface TripAPIResponse {
+  data: Trip[];
   page: number;
   limit: number;
   total: number;

@@ -1,14 +1,16 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
 
+import Heart_black from "@/assets/icons/black_heart.svg";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import React from "react";
 import { TripStyledText } from "@/components/typography/TripTypography";
-// import imageSrc1 from "../../../../../public/images/products/s11.jpg";
 import imageSrc2 from "../../../../../public/images/products/s4.jpg";
 import imageSrc3 from "../../../../../public/images/products/s5.jpg";
 import imageSrc4 from "../../../../../public/images/products/s7.jpg";
 import { numberToINR } from "@/utils/format/numberToMoney";
+import { saveTripToWishlist } from "@/tripAPI/trips";
+import { useMutation } from "@tanstack/react-query";
 
 interface ImageItem {
   imgSrc: StaticImageData;
@@ -45,8 +47,7 @@ const imageData: ImageItem[] = [
 ];
 
 export const getRandomImageItem = (index: number): ImageItem => {
-  //   const randomIndex = Math.floor(Math.random() * imageData.length);
-  return { ...imageData[index] }; // Return copy to avoid mutation
+  return { ...imageData[index] };
 };
 
 const CardTag = ({ label, Icon }: { label: React.ReactNode; Icon: any }) => {
@@ -73,9 +74,10 @@ const CardTag = ({ label, Icon }: { label: React.ReactNode; Icon: any }) => {
 interface TripCardProps {
   place?: string;
   duration?: string;
-  date?: string | Date;
+  date?: Date | string;
   price?: number;
   destination?: string;
+  id: string;
 }
 
 const TripCard = ({
@@ -84,8 +86,16 @@ const TripCard = ({
   place,
   price,
   destination,
+  id,
 }: TripCardProps) => {
   const { imgSrc } = getRandomImageItem(0);
+  const { mutate: saveToWishList } = useMutation({
+    mutationKey: ["save_to_wishlist"],
+    mutationFn: async (id: string) => {
+      const response = await saveTripToWishlist({ id });
+      return response;
+    },
+  });
   return (
     <Card
       sx={{
@@ -141,7 +151,7 @@ const TripCard = ({
                 p: 2,
                 display: "flex",
                 justifyContent: "flex-end",
-                alignItems: "flex-end",
+                alignItems: "center",
                 gap: 0.5,
               }}
             >
@@ -166,12 +176,20 @@ const TripCard = ({
                 >
                   {
                     <CardTag
-                      label={date.toString()}
+                      label={new Date(date).toISOString()}
                       Icon={LocationOnOutlinedIcon}
                     />
                   }
                 </Box>
               )}
+              <Box
+                onClick={(e) => {
+                  e.stopPropagation();
+                  saveToWishList(id);
+                }}
+              >
+                <Heart_black />
+              </Box>
             </Box>
           </Box>
 

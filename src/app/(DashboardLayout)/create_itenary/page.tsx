@@ -9,15 +9,15 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikProps } from "formik";
 import { FieldValueType, fieldNames, fields, intitialValues } from "./fields";
-import React, { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import React, { useRef, useState } from "react";
 
 import Places from "./Places";
 import { TripStyledText } from "@/components/typography/TripTypography";
 import { createItinenary } from "@/tripAPI/itinenary";
 import { getSuggestedPlace } from "@/tripAPI/getSuggestedPlace";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const steps = ["Step 1", "Step 2", "Step 3", "step 4"];
@@ -25,40 +25,29 @@ const steps = ["Step 1", "Step 2", "Step 3", "step 4"];
 const CreateItenary = () => {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState<FieldValueType>(intitialValues);
-
-  const handleNext = (values: FieldValueType) => {
-    if (activeStep === 3) {
-      setFormData(values);
-    }
-    setActiveStep((prevStep) => prevStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1);
-  };
+  const formRef = useRef<FormikProps<FieldValueType>>(null);
 
   const { mutate: createItinenaryForm, isPending } = useMutation({
     mutationKey: ["create_itinenary"],
     mutationFn: async (values: FieldValueType) => {
-      console.log(values);
       const response = await createItinenary(values);
       return response;
     },
     onSuccess: (data) => {
       const { _id } = data ?? {};
-      router.push(`/itinenary_details/${_id}`);
+      router.push(`/trip_details/${_id}`);
     },
   });
 
   const {
+    mutate: getSuggestedPLaces,
     data: places,
     isError,
-    isLoading,
-  } = useQuery({
-    queryKey: ["places", formData],
-    queryFn: async () => {
-      const { days, destination, nights, starting, trip_info } = formData ?? {};
+    isPending: placesPending,
+  } = useMutation({
+    mutationKey: ["places"],
+    mutationFn: async ({ values }: { values: FieldValueType }) => {
+      const { days, destination, nights, starting, trip_info } = values ?? {};
       const response = await getSuggestedPlace({
         days,
         destination,
@@ -69,13 +58,23 @@ const CreateItenary = () => {
       const { places } = response ?? {};
       return places;
     },
-    enabled: activeStep === 3,
   });
 
   const isLastStep = activeStep === steps.length - 1;
-
+  console.log({ places });
   const submitForm = async (values: FieldValueType) => {
     createItinenaryForm(values);
+  };
+
+  const handleNext = (values: FieldValueType) => {
+    setActiveStep((prevStep) => prevStep + 1);
+    if (activeStep === 2) {
+      getSuggestedPLaces({ values });
+    }
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevStep) => prevStep - 1);
   };
 
   return (
@@ -105,6 +104,7 @@ const CreateItenary = () => {
         initialValues={intitialValues}
         onSubmit={submitForm}
         enableReinitialize
+        innerRef={formRef}
       >
         {({ isSubmitting, isValid, values }) => {
           return (
@@ -126,7 +126,7 @@ const CreateItenary = () => {
                                 ]
                               : places
                           }
-                          isLoading={isLoading}
+                          isLoading={placesPending}
                         />
                       </Grid>
                     );
