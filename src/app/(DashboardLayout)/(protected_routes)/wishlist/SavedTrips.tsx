@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import React from "react";
-import TripCard from "../components/tripCard/TripCard";
+import TripCard from "../../../../components/tripCard/TripCard";
 import { getSavedTrips } from "@/tripAPI/trips";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const SavedrTrips = () => {
   const router = useRouter();
-  const { data: savedTrips } = useQuery({
+  const { data: savedTrips, refetch: refetchSavedTrips } = useQuery({
     queryKey: ["saved_trips"],
     queryFn: async () => {
       const response = await getSavedTrips({ limit: 20, page: 1 });
@@ -44,6 +44,9 @@ const SavedrTrips = () => {
               destination={destination}
               date={created_at}
               duration={`${days}D/${nights}N`}
+              onHeartClickCallback={() => {
+                refetchSavedTrips();
+              }}
             />
           </Box>
         );

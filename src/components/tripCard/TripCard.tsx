@@ -5,9 +5,9 @@ import Heart_black from "@/assets/icons/black_heart.svg";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import React from "react";
 import { TripStyledText } from "@/components/typography/TripTypography";
-import imageSrc2 from "../../../../../public/images/products/s4.jpg";
-import imageSrc3 from "../../../../../public/images/products/s5.jpg";
-import imageSrc4 from "../../../../../public/images/products/s7.jpg";
+import imageSrc2 from "../../../public/images/products/s4.jpg";
+// import imageSrc3 from "../../../public/images/products/s5.jpg";
+// import imageSrc4 from "/../../../public/images/products/s7.jpg";
 import { numberToINR } from "@/utils/format/numberToMoney";
 import { saveTripToWishlist } from "@/tripAPI/trips";
 import { useMutation } from "@tanstack/react-query";
@@ -32,18 +32,18 @@ const imageData: ImageItem[] = [
     label: "Kerala Backwaters",
     text: "Experience the serene backwaters",
   },
-  {
-    id: 3,
-    imgSrc: imageSrc3,
-    label: "Himalayan Trek",
-    text: "Adventure in the mighty Himalayas",
-  },
-  {
-    id: 4,
-    imgSrc: imageSrc4,
-    label: "Goa Beach",
-    text: "Relaxing beach vacation in Goa",
-  },
+  // {
+  //   id: 3,
+  //   imgSrc: imageSrc3,
+  //   label: "Himalayan Trek",
+  //   text: "Adventure in the mighty Himalayas",
+  // },
+  // {
+  //   id: 4,
+  //   imgSrc: imageSrc4,
+  //   label: "Goa Beach",
+  //   text: "Relaxing beach vacation in Goa",
+  // },
 ];
 
 export const getRandomImageItem = (index: number): ImageItem => {
@@ -78,6 +78,7 @@ interface TripCardProps {
   price?: number;
   destination?: string;
   id: string;
+  onHeartClickCallback?: () => void;
 }
 
 const TripCard = ({
@@ -87,6 +88,7 @@ const TripCard = ({
   price,
   destination,
   id,
+  onHeartClickCallback,
 }: TripCardProps) => {
   const { imgSrc } = getRandomImageItem(0);
   const { mutate: saveToWishList } = useMutation({
@@ -94,6 +96,11 @@ const TripCard = ({
     mutationFn: async (id: string) => {
       const response = await saveTripToWishlist({ id });
       return response;
+    },
+    onSuccess: () => {
+      if (onHeartClickCallback) {
+        onHeartClickCallback();
+      }
     },
   });
   return (

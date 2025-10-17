@@ -1,11 +1,12 @@
 "use client";
 
-import { Box, CircularProgress, styled } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, styled } from "@mui/material";
+import React, { useEffect } from "react";
 
-import { useRouter } from "next/navigation";
+import BottomNavTab from "@/components/BottomNavTab";
+import { refreshAccessToken } from "@/tripAPI/refreshToken";
 
-const MainWrapper = styled("div")(() => ({
+export const MainWrapper = styled("div")(() => ({
   display: "flex",
   minHeight: "100vh",
   width: "100%",
@@ -16,40 +17,48 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [loader, setLoader] = useState<boolean>(true);
-  const router = useRouter();
+  const refreshToken = async () => {
+    try {
+      const rt = localStorage.getItem("refreshToken");
+      if (!rt) {
+        throw new Error("No Refresh Token Found");
+      }
+      const response = await refreshAccessToken();
+      const { access_token, refresh_token } = response ?? {};
+      localStorage.setItem("token", access_token);
+      localStorage.setItem("refreshToken", refresh_token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const checkAuth = () => {
-      try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          console.log("No token found, redirecting to login");
-          router.push("/authentication/login");
-        }
-      } catch (error) {
-        console.error("Authentication check failed:", error);
-        router.push("/authentication/login");
-      } finally {
-        setLoader(false);
+    let flag = false;
+    const interval = setInterval(() => {
+      if (flag) {
+        refreshToken();
       }
-    };
+      flag = true;
+    }, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-    checkAuth();
-  }, [router]);
-
-  if (loader) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-  return <MainWrapper>{children}</MainWrapper>;
+  // if (loader) {
+  //   return (
+  //     <Box
+  //       display="flex"
+  //       justifyContent="center"
+  //       alignItems="center"
+  //       minHeight="100vh"
+  //     >
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
+  return (
+    <MainWrapper>
+      <Box sx={{ width: "100%" }}>{children}</Box>
+      <BottomNavTab />
+    </MainWrapper>
+  );
 }

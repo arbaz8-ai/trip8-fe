@@ -14,7 +14,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import React from "react";
-import TripCard from "../components/tripCard/TripCard";
+import TripCard from "@/components/tripCard/TripCard";
 import { TripStyledSubText } from "@/components/typography/TripTypography";
 import { getProfile } from "@/tripAPI/user";
 import { getTrips } from "@/tripAPI/itinenary";
@@ -80,7 +80,7 @@ const HomePage = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Typography variant="h6">Good Morning, {name}</Typography>
+          <Typography variant="h6">Greeting, {name}</Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <LocationOnIcon sx={{ height: 24, width: 24 }} color="primary" />

@@ -24,7 +24,11 @@ export const getOTP = async (body: {
   role?: string;
 }) => {
   try {
-    const response = await tripAPI.post<any>("auth/otp/send", {
+    const response = await tripAPI.post<{
+      message: string;
+      sent: string;
+      otp: string;
+    }>("auth/otp/send", {
       ...body,
     });
     const { data } = response ?? {};

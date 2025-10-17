@@ -1,14 +1,19 @@
 import { tripAPI } from "@/utils/fetch/fetch";
 
-export const refreshToken = async () => {
+export const refreshAccessToken = async () => {
   try {
-    const rt = localStorage.getItem("refreshToken");
-    const response = await tripAPI.post<{ token: string }>("auth/refresh", {
-      refresh_token: rt,
+    const refresh_token = localStorage.getItem("refreshToken");
+    if (!refresh_token) {
+      throw new Error("No Refresh Token");
+    }
+    const response = await tripAPI.post<{
+      access_token: string;
+      refresh_token: string;
+    }>("auth/refresh", {
+      refresh_token,
     });
     const { data } = response ?? {};
-    const { token } = data ?? {};
-    localStorage.setItem("token", token);
+    return data;
   } catch (error: any) {
     console.log(error);
     throw error;

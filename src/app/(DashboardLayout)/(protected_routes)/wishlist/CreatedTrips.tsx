@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React from "react";
-import TripCard from "../components/tripCard/TripCard";
+import TripCard from "../../../../components/tripCard/TripCard";
 import { getCreatedTrips } from "@/tripAPI/trips";
 import { useQuery } from "@tanstack/react-query";
 
