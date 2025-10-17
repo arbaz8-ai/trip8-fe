@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import ProfileIcon from "@/assets/icons/home.svg";
 import UserIcon from "@/assets/icons/user.svg";
-import WishlistIcon from "@/assets/icons/Heart.svg";
+import WishlistIcon from "@/assets/icons/heart.svg";
 
 const BottomNavTab = () => {
   const router = useRouter();
