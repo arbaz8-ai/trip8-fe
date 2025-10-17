@@ -40,10 +40,12 @@ const OtpPage = () => {
       localStorage.setItem("token", access_token);
       localStorage.setItem("refreshToken", refresh_token);
       localStorage.removeItem("number");
-      router.push("/home");
+      router.push("/");
+      localStorage.removeItem("otp");
     },
   });
 
+  const otp = localStorage.getItem("otp");
   return (
     <Container
       maxWidth={"sm"}
@@ -54,6 +56,7 @@ const OtpPage = () => {
       }}
     >
       <Box>
+        <Box>{otp}</Box>
         <Typography variant="h3">OTP Verification</Typography>
         <Typography sx={{ color: theme.palette.text.secondary, mb: 2 }}>
           A 4 digit code has been sent to your WhatsApp.

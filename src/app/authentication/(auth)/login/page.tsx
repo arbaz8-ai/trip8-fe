@@ -65,12 +65,12 @@ const Login2 = () => {
 
       return response;
     },
-    onSuccess: (_data, values) => {
+    onSuccess: (data, values) => {
       router.push(`/authentication/otp`);
       localStorage.setItem("user", JSON.stringify(values));
+      localStorage.setItem("otp", data?.otp ?? "");
     },
   });
-
   const submitForm = async (values: FieldValueType) => {
     loginForm(values);
   };
@@ -84,97 +84,95 @@ const Login2 = () => {
           height: { xs: "100%", md: "fit-content" },
         }}
       >
-        <>
-          <Typography variant="h3" mb={1}>
-            Sign In
-          </Typography>
-          <Typography variant="body2" color="text.secondary" mb={2}>
-            Fill the following to log into your account
-          </Typography>
+        <Typography variant="h3" mb={1}>
+          Sign In
+        </Typography>
+        <Typography variant="body2" color="text.secondary" mb={2}>
+          Fill the following to log into your account
+        </Typography>
 
-          <Formik
-            initialValues={!!number ? { mobile_email: number } : intialValues}
-            validationSchema={validationSchema}
-            onSubmit={submitForm}
-            enableReinitialize
-          >
-            {() => (
-              <Form id="form">
-                <Box sx={{ display: "flex", gap: 1 }}>
-                  <Box sx={{ width: 60 }}>
-                    <CountryCodeText value={"+91"} />
-                  </Box>
-                  {fields.map((item) => {
-                    const { name } = item ?? {};
-                    return (
-                      <Box key={name} mb={2} sx={{ flex: 1 }}>
-                        <Field {...item} />{" "}
-                      </Box>
-                    );
-                  })}
+        <Formik
+          initialValues={!!number ? { mobile_email: number } : intialValues}
+          validationSchema={validationSchema}
+          onSubmit={submitForm}
+          enableReinitialize
+        >
+          {() => (
+            <Form id="form">
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Box sx={{ width: 60 }}>
+                  <CountryCodeText value={"+91"} />
                 </Box>
+                {fields.map((item) => {
+                  const { name } = item ?? {};
+                  return (
+                    <Box key={name} mb={2} sx={{ flex: 1 }}>
+                      <Field {...item} />{" "}
+                    </Box>
+                  );
+                })}
+              </Box>
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  sx={{ borderRadius: 2, py: 1.2, fontWeight: "bold" }}
-                  disabled={isPending}
-                >
-                  {isPending ? "Signing In..." : "Sign In"}
-                </Button>
-              </Form>
-            )}
-          </Formik>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{ borderRadius: 2, py: 1.2, fontWeight: "bold" }}
+                disabled={isPending}
+              >
+                {isPending ? "Signing In..." : "Sign In"}
+              </Button>
+            </Form>
+          )}
+        </Formik>
 
-          <Divider sx={{ my: 3 }}>Or Login with</Divider>
+        <Divider sx={{ my: 3 }}>Or Login with</Divider>
 
-          <Button
-            variant="outlined"
-            fullWidth
-            startIcon={<GoogleIcon />}
+        <Button
+          variant="outlined"
+          fullWidth
+          startIcon={<GoogleIcon />}
+          sx={{
+            borderRadius: 2,
+            py: 1.2,
+            borderColor: "grey.300",
+            color: "grey.600",
+          }}
+        >
+          Google
+        </Button>
+
+        <Typography
+          variant="body2"
+          mt={2}
+          textAlign="center"
+          color="text.secondary"
+        >
+          Don’t have an account ?
+          <Box
+            component={"span"}
             sx={{
-              borderRadius: 2,
-              py: 1.2,
-              borderColor: "grey.300",
-              color: "grey.600",
+              color: "primary.main",
+              cursor: "pointer",
+              fontWeight: 500,
+              textDecoration: "none",
+              ml: 0.5,
             }}
           >
-            Google
-          </Button>
-
-          <Typography
-            variant="body2"
-            mt={2}
-            textAlign="center"
-            color="text.secondary"
-          >
-            Don’t have an account ?
-            <Box
-              component={"span"}
-              sx={{
-                color: "primary.main",
-                cursor: "pointer",
-                fontWeight: 500,
+            <Link
+              href={{
+                pathname: "/authentication/register",
+                // query: ,
+              }}
+              style={{
                 textDecoration: "none",
-                ml: 0.5,
+                color: theme.palette.primary.main,
               }}
             >
-              <Link
-                href={{
-                  pathname: "/authentication/register",
-                  // query: ,
-                }}
-                style={{
-                  textDecoration: "none",
-                  color: theme.palette.primary.main,
-                }}
-              >
-                Sign Up
-              </Link>
-            </Box>
-          </Typography>
-        </>
+              Sign Up
+            </Link>
+          </Box>
+        </Typography>
       </Container>
     </Box>
   );
