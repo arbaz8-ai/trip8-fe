@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 const OtpPage = () => {
   const theme = useTheme();
   const [user, setUser] = useState<any | null>(null);
+  const [otp, setOtp] = useState("");
 
   useEffect(() => {
     try {
@@ -44,8 +45,10 @@ const OtpPage = () => {
       localStorage.removeItem("otp");
     },
   });
-
-  const otp = localStorage.getItem("otp");
+  useEffect(() => {
+    const ls = localStorage.getItem("otp");
+    setOtp(ls ?? "");
+  }, []);
   return (
     <Container
       maxWidth={"sm"}
