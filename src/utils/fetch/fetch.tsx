@@ -1,3 +1,5 @@
+import { getNewTokenByRefreshToken, isTokenExpired } from "../apiServices";
+
 class FetchClient {
   private baseURL: string;
   private defaultHeaders: HeadersInit;
@@ -18,6 +20,7 @@ class FetchClient {
 
   private async getHeaders(customHeaders?: HeadersInit): Promise<HeadersInit> {
     const token = await this.getAuthToken();
+    console.log({ getHeadderToken: token });
     const headers: Record<string, string> = {
       ...((this.defaultHeaders as Record<string, string>) || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -52,20 +55,30 @@ class FetchClient {
     params?: Record<string, any>
   ): Promise<{ response: Response; data: T }> {
     const url = this.buildUrl(endpoint, params);
-    const headers = await this.getHeaders(options.headers);
-
-    const config: RequestInit = {
-      ...options,
-      headers,
-    };
 
     try {
+      const TOKEN_EXPIRED = isTokenExpired();
+      console.log({ TOKEN_EXPIRED });
+      if (TOKEN_EXPIRED) {
+        const { access_token } = await getNewTokenByRefreshToken();
+        console.log({ newTokenFromRefreshToken: access_token });
+        localStorage.setItem("token", access_token);
+      }
+
+      const headers = await this.getHeaders(options.headers);
+
+      const config: RequestInit = {
+        ...options,
+        headers,
+      };
+
       const response = await fetch(url, config);
 
       if (response.status === 401) {
-        // if (typeof window !== "undefined") {
-        //   window.location.href = "/authentication/login";
-        // }
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+          window.location.href = "/authentication/login";
+        }
         throw new Error("Unauthorized");
       }
 
