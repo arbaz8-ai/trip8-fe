@@ -5,7 +5,7 @@ import { Box, styled } from "@mui/material";
 import BottomNavTab from "@/components/BottomNavTab";
 import React from "react";
 
-export const MainWrapper = styled("div")(() => ({
+const MainWrapper = styled("div")(() => ({
   display: "flex",
   minHeight: "100vh",
   width: "100%",
