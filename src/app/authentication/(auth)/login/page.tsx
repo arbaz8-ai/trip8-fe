@@ -3,6 +3,7 @@
 import * as Yup from "yup";
 
 import {
+  AlertColor,
   Box,
   Button,
   Container,
@@ -17,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
 import TextField from "@/components/textField/TextField";
+import TripSnackbar from "@/components/tripSnackbar/TripSnackbar";
 import { getOTP } from "@/tripAPI/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -50,7 +52,13 @@ const validationSchema = Yup.object({
 const Login2 = () => {
   const theme = useTheme();
   const router = useRouter();
-
+  const [snackbar, setSnackbar] = useState<{
+    message: string;
+    severity?: AlertColor;
+  }>({
+    message: "",
+    severity: undefined,
+  });
   const [number, setNumber] = useState<string | null>(null);
 
   useEffect(() => {
@@ -62,18 +70,24 @@ const Login2 = () => {
     mutationKey: ["signin"],
     mutationFn: async (values: FieldValueType) => {
       const response = await getOTP(values);
-
       return response;
     },
+
     onSuccess: (data, values) => {
       router.push(`/authentication/otp`);
       localStorage.setItem("user", JSON.stringify(values));
       localStorage.setItem("otp", data?.otp ?? "");
     },
+
+    onError: () => {
+      setSnackbar({ message: "Something went wrong", severity: "error" });
+    },
   });
+
   const submitForm = async (values: FieldValueType) => {
     loginForm(values);
   };
+
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
       <Container
@@ -174,6 +188,12 @@ const Login2 = () => {
           </Box>
         </Typography>
       </Container>
+      <TripSnackbar
+        open={Boolean(snackbar.message && snackbar.severity)}
+        onClose={() => setSnackbar({ message: "", severity: undefined })}
+        severity={snackbar.severity}
+        message={snackbar.message}
+      />
     </Box>
   );
 };

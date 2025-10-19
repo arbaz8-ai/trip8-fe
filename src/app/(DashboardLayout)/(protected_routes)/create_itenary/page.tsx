@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertColor,
   Box,
   Button,
   Grid,
@@ -14,6 +15,7 @@ import { FieldValueType, fieldNames, fields, intitialValues } from "./fields";
 import React, { useRef, useState } from "react";
 
 import Places from "./Places";
+import TripSnackbar from "@/components/tripSnackbar/TripSnackbar";
 import { TripStyledText } from "@/components/typography/TripTypography";
 import { createItinenary } from "@/tripAPI/itinenary";
 import { getSuggestedPlace } from "@/tripAPI/getSuggestedPlace";
@@ -26,6 +28,13 @@ const CreateItenary = () => {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
   const formRef = useRef<FormikProps<FieldValueType>>(null);
+  const [snackbar, setSnackbar] = useState<{
+    message: string;
+    severity?: AlertColor;
+  }>({
+    message: "",
+    severity: undefined,
+  });
 
   const { mutate: createItinenaryForm, isPending } = useMutation({
     mutationKey: ["create_itinenary"],
@@ -36,6 +45,9 @@ const CreateItenary = () => {
     onSuccess: (data) => {
       const { _id } = data ?? {};
       router.push(`/trip_details/${_id}`);
+    },
+    onError: () => {
+      setSnackbar({ message: "Something went wrong", severity: "error" });
     },
   });
 
@@ -57,6 +69,9 @@ const CreateItenary = () => {
       });
       const { places } = response ?? {};
       return places;
+    },
+    onError: () => {
+      setSnackbar({ message: "Something went wrong", severity: "error" });
     },
   });
 
@@ -176,6 +191,12 @@ const CreateItenary = () => {
           );
         }}
       </Formik>
+      <TripSnackbar
+        open={Boolean(snackbar.message && snackbar.severity)}
+        onClose={() => setSnackbar({ message: "", severity: undefined })}
+        severity={snackbar.severity}
+        message={snackbar.message}
+      />
     </Box>
   );
 };

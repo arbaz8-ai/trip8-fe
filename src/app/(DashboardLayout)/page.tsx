@@ -16,8 +16,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import React from "react";
 import TripCard from "@/components/tripCard/TripCard";
 import { TripStyledSubText } from "@/components/typography/TripTypography";
-import { getProfile } from "@/tripAPI/user";
 import { getTrips } from "@/tripAPI/itinenary";
+import { getUser } from "@/tripAPI/user";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -55,7 +55,7 @@ const HomePage = () => {
   const { data: profileData } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
-      const response = await getProfile();
+      const response = await getUser();
       return response;
     },
   });

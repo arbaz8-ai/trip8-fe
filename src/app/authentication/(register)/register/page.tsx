@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertColor,
   Box,
   Button,
   Container,
@@ -16,6 +17,7 @@ import {
   intialValues,
   validationSchema,
 } from "./fields";
+import React, { useState } from "react";
 import {
   SubHeader,
   TripStyledText,
@@ -23,7 +25,7 @@ import {
 
 import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
-import React from "react";
+import TripSnackbar from "@/components/tripSnackbar/TripSnackbar";
 import { getOTP } from "@/tripAPI/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -31,6 +33,13 @@ import { useRouter } from "next/navigation";
 const Register = () => {
   const theme = useTheme();
   const router = useRouter();
+  const [snackbar, setSnackbar] = useState<{
+    message: string;
+    severity?: AlertColor;
+  }>({
+    message: "",
+    severity: undefined,
+  });
   const { mutate: onSignup, isPending } = useMutation({
     mutationKey: ["register"],
     mutationFn: async (values: FieldValueType) => {
@@ -40,6 +49,10 @@ const Register = () => {
     onSuccess: (data, values) => {
       router.push("/authentication/otp");
       localStorage.setItem("user", JSON.stringify(values));
+      localStorage.setItem("otp", data?.otp ?? "");
+    },
+    onError: () => {
+      setSnackbar({ message: "Something went wrong", severity: "error" });
     },
   });
 
@@ -129,6 +142,12 @@ const Register = () => {
           );
         }}
       </Formik>
+      <TripSnackbar
+        open={Boolean(snackbar.message && snackbar.severity)}
+        onClose={() => setSnackbar({ message: "", severity: undefined })}
+        severity={snackbar.severity}
+        message={snackbar.message}
+      />
     </Container>
   );
 };
