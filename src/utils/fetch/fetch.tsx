@@ -60,7 +60,7 @@ class FetchClient {
       const TOKEN_EXPIRED = isTokenExpired();
       console.log({ TOKEN_EXPIRED });
       if (TOKEN_EXPIRED) {
-        const { access_token: newToken } = await getNewTokenByRefreshToken();
+        const { accessToken: newToken } = await getNewTokenByRefreshToken();
         localStorage.setItem("token", newToken);
       }
 
