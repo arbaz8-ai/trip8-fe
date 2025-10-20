@@ -1,4 +1,3 @@
-import { LoginResult } from "@/types/APIResponse/Login";
 import { jwtDecode } from "jwt-decode";
 
 export const isTokenExpired = () => {
@@ -36,7 +35,7 @@ export const getNewTokenByRefreshToken = async () => {
       throw new Error("Failed to refresh token");
     }
 
-    const data = (await response.json()) as LoginResult;
+    const data = (await response.json()) as { accessToken: string };
     return data;
   } catch (error) {
     console.error("Token refresh failed:", error);
