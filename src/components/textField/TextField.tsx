@@ -38,7 +38,7 @@ const TextField: FC<TextFieldType> = ({
   options,
   textTransform = "",
   variant = "outlined",
-  color = "secondary",
+  color = "primary",
   maxLength,
   InputProps,
   ...mTextFieldProps

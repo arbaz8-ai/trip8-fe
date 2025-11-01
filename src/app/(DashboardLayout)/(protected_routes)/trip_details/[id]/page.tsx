@@ -7,6 +7,7 @@ import ItineraryDetails from "../ItinenaryDetails";
 import { TripStyledSubText } from "@/components/typography/TripTypography";
 import { getItinenaryById } from "@/tripAPI/itinenary";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const fakeDays = [
   {
@@ -150,6 +151,7 @@ type Props = {
 const page = ({ params }: Props) => {
   const { id } = use(params) ?? {};
 
+  const router = useRouter();
   const { data: itinenaryDetails, isError } = useQuery({
     queryKey: ["itinenary_details", id],
     queryFn: async () => {
@@ -161,6 +163,10 @@ const page = ({ params }: Props) => {
   });
 
   const { days = [], location } = itinenaryDetails ?? {};
+
+  const redirectToQoute = () => {
+    router.push(`/create_quotes/${id}`);
+  };
 
   return (
     <Box>
@@ -182,6 +188,7 @@ const page = ({ params }: Props) => {
           variant="contained"
           fullWidth
           sx={{ borderRadius: 2, fontWeight: 600 }}
+          onClick={redirectToQoute}
         >
           Request Quote
         </Button>

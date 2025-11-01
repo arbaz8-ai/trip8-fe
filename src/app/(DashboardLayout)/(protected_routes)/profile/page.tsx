@@ -32,11 +32,12 @@ import React, { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
 import { getUser } from "@/tripAPI/user";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
   { icon: <Lock />, text: "Change Password" },
   { icon: <Book />, text: "My Booking" },
-  { icon: <Description />, text: "My Quotations" },
+  { icon: <Description />, text: "My Quotations", redirect: "/quotation_list" },
   { icon: <Route />, text: "My Itineraries" },
   { icon: <Star />, text: "Favorites" },
   { icon: <Notifications />, text: "Notifications" },
@@ -47,6 +48,7 @@ const menuItems = [
 const page = () => {
   const theme = useTheme();
   const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleCloseProfile = () => {
     setProfileModalOpen(false);
@@ -155,7 +157,14 @@ const page = () => {
         {/* Menu List */}
         <List>
           {menuItems.map((item, index) => (
-            <ListItemButton key={index}>
+            <ListItemButton
+              key={index}
+              onClick={() => {
+                if (item.redirect) {
+                  router.push(item.redirect);
+                }
+              }}
+            >
               <ListItemIcon sx={{ color: "black" }}>{item.icon}</ListItemIcon>
               <ListItemText
                 primary={<Typography fontWeight={500}>{item.text}</Typography>}
