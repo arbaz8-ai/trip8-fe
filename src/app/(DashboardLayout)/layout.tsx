@@ -8,7 +8,8 @@ import React from "react";
 const MainWrapper = styled("div")(() => ({
   display: "flex",
   minHeight: "100vh",
-  width: "100%",
+  width: "390px",
+  margin: "auto",
 }));
 
 export default function RootLayout({
