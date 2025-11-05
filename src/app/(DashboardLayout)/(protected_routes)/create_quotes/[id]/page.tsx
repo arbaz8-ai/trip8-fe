@@ -15,24 +15,16 @@ import {
 } from "@mui/material";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { FieldValueType, fields, initialValues, reviewFields } from "../fields";
-import React, { createContext, use, useRef, useState } from "react";
+import React, { use, useRef, useState } from "react";
 import { bluePalette, skyPalette } from "@/utils/theme/tripColor";
 
 import FamilyIcon from "@/assets/icons/human-male-child.svg";
+import { ReviewContext } from "./review/ReviewContext";
 import TripSnackbar from "@/components/tripSnackbar/TripSnackbar";
 import { TripStyledText } from "@/components/typography/TripTypography";
 import { useRouter } from "next/navigation";
 
 const steps = ["Step 1", "Step 2", "Step 3"];
-
-interface ReviewContextType {
-  reviewData: FieldValueType;
-  setReviewData?: (data: FieldValueType) => void;
-}
-
-export const ReviewContext = createContext<ReviewContextType | undefined>(
-  undefined
-);
 
 type Props = {
   params: Promise<{ id: string }>;
