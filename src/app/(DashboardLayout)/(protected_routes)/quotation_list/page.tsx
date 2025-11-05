@@ -6,6 +6,7 @@ import {
   BoxProps,
   Button,
   Chip,
+  CircularProgress,
   Container,
   Divider,
   Rating,
@@ -17,7 +18,9 @@ import EmptyScreen from "./EmptyScreen";
 import React from "react";
 import TripCollapse from "./TripCollapse";
 import { TripStyledText } from "@/components/typography/TripTypography";
+import { getQuotations } from "@/tripAPI/quotation";
 import { numberToINR } from "@/utils/format/numberToMoney";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 interface QuotesCardProps extends BoxProps {
@@ -148,31 +151,50 @@ const QuotesCard = ({
 };
 
 const page = () => {
-  const data = 1;
-  if (!data) {
+  const { data: quotationList, isLoading: quotationListLoading } = useQuery({
+    queryKey: ["quotation_list"],
+    queryFn: async () => {
+      const response = await getQuotations();
+      return response;
+    },
+  });
+  if (!quotationList) {
     return <EmptyScreen />;
+  }
+  if (quotationListLoading) {
+    return <CircularProgress />;
   }
   return (
     <Container maxWidth="xl" sx={{ px: 2 }}>
       <Typography variant="h6" sx={{ mb: 4, mt: 2 }}>
-        3 Quotes Recieved
+        - Quotes Recieved
       </Typography>
 
-      <QuotesCard
-        price={18000}
-        rating={4}
-        id="1"
-        user_name="Arbaz"
-        description="It is a long established fact that a reader will be distracted by the
-        readable content of a page when looking at its layout Lorem ipsum
-          dolor sit amet consectetur. It is a long established fact that a
-          reader will be distracted by the readable content of a page when
-          looking at its layout Lorem ipsum dolor sit amet consectetur."
-        hotel="5 Star Hotel"
-        car="Dzire"
-        activity="5 Activity"
-        reserve_price={500}
-      />
+      {quotationList.map(
+        ({
+          _id,
+          price,
+          trip_id,
+          user: { name: user_name },
+          car: { model: car_model },
+          stay: { hotel_name },
+        }) => {
+          return (
+            <QuotesCard
+              key={_id}
+              price={price ?? 18000}
+              rating={4}
+              id={trip_id ?? "1"}
+              user_name={user_name ?? "-"}
+              description="-"
+              hotel={hotel_name ?? "-"}
+              car={car_model ?? "-"}
+              activity="-"
+              reserve_price={0}
+            />
+          );
+        }
+      )}
 
       <Box sx={{ my: 3 }}>
         <Typography variant="h5" sx={{ mb: 2 }}>

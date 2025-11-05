@@ -8,6 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import React, { use } from "react";
 import {
   TripStyledSubText,
   TripStyledText,
@@ -18,7 +19,6 @@ import CheckIcon from "@/assets/icons/circle-check.svg";
 import ClockIcon from "@/assets/icons/clock.svg";
 import CrossIcon from "@/assets/icons/circle-cross.svg";
 import LocationIcon from "@/assets/icons/location.svg";
-import React from "react";
 import StarIcon from "@/assets/icons/single-star.svg";
 import { numberToINR } from "@/utils/format/numberToMoney";
 
@@ -31,7 +31,12 @@ const inclusionList = [
   "Dinner",
 ];
 
-const page = () => {
+type Props = {
+  params: Promise<{ id: string }>;
+};
+const page = ({ params }: Props) => {
+  const { id } = use(params) ?? {};
+  console.log({ id });
   const theme = useTheme();
   return (
     <Container maxWidth="xl" sx={{ px: 2 }}>
@@ -60,7 +65,7 @@ const page = () => {
             }}
           >
             <Typography>Total Trips Conducted</Typography>
-            <Typography sx={{ fontWeight: 700 }}>200</Typography>
+            <Typography sx={{ fontWeight: 700 }}>0</Typography>
           </Box>
         </Box>
         <Divider sx={{ background: "grey.300" }} />
@@ -74,9 +79,7 @@ const page = () => {
           }}
         >
           <Box>
-            <Typography sx={{ fontWeight: 700, lineHeight: 0.8 }}>
-              684
-            </Typography>
+            <Typography sx={{ fontWeight: 700, lineHeight: 0.8 }}>-</Typography>
             <TripStyledText>Reviews</TripStyledText>
           </Box>
           <Divider orientation="vertical" variant="middle" flexItem />
@@ -84,16 +87,14 @@ const page = () => {
             <StarIcon fill="currentColor" style={{ height: 20, width: 20 }} />
             <Box>
               <Typography sx={{ fontWeight: 700, lineHeight: 0.8 }}>
-                4.91
+                -
               </Typography>
               <TripStyledText>Rating</TripStyledText>
             </Box>
           </Box>
           <Divider orientation="vertical" variant="middle" flexItem />
           <Box>
-            <Typography sx={{ fontWeight: 700, lineHeight: 0.8 }}>
-              7 Year
-            </Typography>
+            <Typography sx={{ fontWeight: 700, lineHeight: 0.8 }}>-</Typography>
             <TripStyledText>Experience</TripStyledText>
           </Box>
         </Box>
@@ -107,29 +108,22 @@ const page = () => {
         }}
       >
         <Typography variant="h5" sx={{ mb: 1 }}>
-          Description
+          -
         </Typography>
-        <TripStyledText>
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout. The point of
-          using Lorem Ipsum is that it has a more-or-less normal distribution of
-          letters, as opposed to using Content here, content here, making it
-          look like readable English. Many desktop publishing packages and web
-          page editors now use.
-        </TripStyledText>
+        <TripStyledText>-</TripStyledText>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, py: 1 }}>
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <ClockIcon fill="currentColor" />
-          <Typography>I spend too much time: on my phone</Typography>
+          <Typography>I spend too much time: -</Typography>
         </Box>
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <LocationIcon fill="currentColor" />
-          <Typography>Live In : Assam</Typography>
+          <Typography>Live In : -</Typography>
         </Box>
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <ChatIcon fill="currentColor" />
-          <Typography>Speak English, Hindi, Assamese and Bodo.</Typography>
+          <Typography>-</Typography>
         </Box>
       </Box>
 
@@ -198,15 +192,11 @@ const page = () => {
           >
             <Box>
               <TripStyledText>Reservation Amount</TripStyledText>
-              <Typography sx={{ fontWeight: 700 }}>
-                {numberToINR(500)}
-              </Typography>
+              <Typography sx={{ fontWeight: 700 }}>{numberToINR(0)}</Typography>
             </Box>
             <Box>
               <TripStyledText>Balance Amount</TripStyledText>
-              <Typography sx={{ fontWeight: 700 }}>
-                {numberToINR(19500)}
-              </Typography>
+              <Typography sx={{ fontWeight: 700 }}>{numberToINR(0)}</Typography>
             </Box>
           </Box>
         </Box>

@@ -19,6 +19,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
 import TextField from "@/components/textField/TextField";
 import TripSnackbar from "@/components/tripSnackbar/TripSnackbar";
+import { getErrorMessage } from "@/utils/APIInterceptor";
 import { getOTP } from "@/tripAPI/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -69,7 +70,8 @@ const Login2 = () => {
   const { mutate: loginForm, isPending } = useMutation({
     mutationKey: ["signin"],
     mutationFn: async (values: FieldValueType) => {
-      const response = await getOTP(values);
+      const { mobile_email } = values ?? {};
+      const response = await getOTP({ mobile_email: `+91${mobile_email}` });
       return response;
     },
 
@@ -79,8 +81,10 @@ const Login2 = () => {
       localStorage.setItem("otp", data?.otp ?? "");
     },
 
-    onError: () => {
-      setSnackbar({ message: "Something went wrong", severity: "error" });
+    onError: (error) => {
+      const message = getErrorMessage(error);
+      console.log({ error });
+      setSnackbar({ message: message, severity: "error" });
     },
   });
 

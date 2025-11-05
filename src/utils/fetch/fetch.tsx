@@ -85,7 +85,7 @@ class FetchClient {
         let errorMessage = `HTTP error! status: ${response.status}`;
         try {
           const errorData = await response.json();
-          errorMessage = errorData.message || errorMessage;
+          errorMessage = errorData.error || errorMessage;
         } catch (error: unknown) {
           console.log(error);
         }
