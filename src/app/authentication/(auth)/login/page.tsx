@@ -77,7 +77,9 @@ const Login2 = () => {
 
     onSuccess: (data, values) => {
       router.push(`/authentication/otp`);
-      localStorage.setItem("user", JSON.stringify(values));
+      const { mobile_email } = values ?? {};
+      const modifiedValue = { ...values, mobile_email: `+91${mobile_email}` };
+      localStorage.setItem("user", JSON.stringify(modifiedValue));
       localStorage.setItem("otp", data?.otp ?? "");
     },
 

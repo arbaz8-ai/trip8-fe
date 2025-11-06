@@ -158,11 +158,11 @@ const page = () => {
       return response;
     },
   });
-  if (!quotationList) {
-    return <EmptyScreen />;
-  }
   if (quotationListLoading) {
     return <CircularProgress />;
+  }
+  if (!quotationList?.length) {
+    return <EmptyScreen />;
   }
   return (
     <Container maxWidth="xl" sx={{ px: 2 }}>

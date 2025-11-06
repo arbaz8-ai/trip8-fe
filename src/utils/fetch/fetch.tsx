@@ -20,7 +20,6 @@ class FetchClient {
 
   private async getHeaders(customHeaders?: HeadersInit): Promise<HeadersInit> {
     const token = await this.getAuthToken();
-    console.log({ getHeadderToken: token });
     const headers: Record<string, string> = {
       ...((this.defaultHeaders as Record<string, string>) || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),

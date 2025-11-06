@@ -43,12 +43,23 @@ const Register = () => {
   const { mutate: onSignup, isPending } = useMutation({
     mutationKey: ["register"],
     mutationFn: async (values: FieldValueType) => {
-      const response = await getOTP({ ...values, role: "USER" });
+      const { mobile_email, ...restValues } = values ?? {};
+
+      const response = await getOTP({
+        mobile_email: `+91${mobile_email}`,
+        ...restValues,
+        role: "USER",
+      });
       return response;
     },
     onSuccess: (data, values) => {
       router.push("/authentication/otp");
-      localStorage.setItem("user", JSON.stringify(values));
+      const { mobile_email } = values ?? {};
+      const modilfiedValue = {
+        ...values,
+        mobile_email: `+01${mobile_email}`,
+      };
+      localStorage.setItem("user", JSON.stringify(modilfiedValue));
       localStorage.setItem("otp", data?.otp ?? "");
     },
     onError: () => {
