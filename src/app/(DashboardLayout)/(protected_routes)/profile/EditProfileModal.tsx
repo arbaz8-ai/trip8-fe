@@ -83,7 +83,7 @@ const EditProfileModal = forwardRef(
         <Container
           disableGutters={true}
           component="main"
-          maxWidth="md"
+          maxWidth="xs"
           sx={{
             outline: "none",
             position: "absolute",

@@ -70,32 +70,32 @@ const baselightTheme = createTheme({
   typography: {
     fontFamily: plus.style.fontFamily,
     h1: {
-      fontWeight: 600,
-      fontSize: "2.25rem",
+      fontWeight: 700,
+      fontSize: 32,
       lineHeight: "2.75rem",
       fontFamily: plus.style.fontFamily,
     },
     h2: {
-      fontWeight: 600,
-      fontSize: "1.875rem",
+      fontWeight: 700,
+      fontSize: 28,
       lineHeight: "2.25rem",
       fontFamily: plus.style.fontFamily,
     },
     h3: {
       fontWeight: 700,
-      fontSize: 20,
+      fontSize: 24,
       color: blueGreyPalette[900],
       lineHeight: 1.2,
       fontFamily: plus.style.fontFamily,
     },
     h4: {
       fontWeight: 600,
-      fontSize: "1.3125rem",
+      fontSize: 20,
       lineHeight: "1.6rem",
     },
     h5: {
-      fontWeight: 600,
-      fontSize: "1.125rem",
+      fontWeight: 700,
+      fontSize: 18,
       lineHeight: "1.6rem",
     },
     h6: {

@@ -147,7 +147,7 @@ const CreateItenary = () => {
                     );
                   }
                   return (
-                    <Grid size={{ xs: 12, sm: 6 }} key={item.name} mb={2}>
+                    <Grid size={{ xs: 12 }} key={item.name} mb={2}>
                       <Field {...item} />
                     </Grid>
                   );

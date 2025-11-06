@@ -4,6 +4,8 @@ import { tripAPI } from "@/utils/fetch/fetch";
 export const postSignin = async (body: {
   mobile_email: string;
   otp: string;
+  name?: string;
+  source?: string;
 }) => {
   try {
     const response = await tripAPI.post<LoginResult>("auth/otp/login", {

@@ -20,7 +20,6 @@ class FetchClient {
 
   private async getHeaders(customHeaders?: HeadersInit): Promise<HeadersInit> {
     const token = await this.getAuthToken();
-    console.log({ getHeadderToken: token });
     const headers: Record<string, string> = {
       ...((this.defaultHeaders as Record<string, string>) || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -85,7 +84,7 @@ class FetchClient {
         let errorMessage = `HTTP error! status: ${response.status}`;
         try {
           const errorData = await response.json();
-          errorMessage = errorData.message || errorMessage;
+          errorMessage = errorData.error || errorMessage;
         } catch (error: unknown) {
           console.log(error);
         }
