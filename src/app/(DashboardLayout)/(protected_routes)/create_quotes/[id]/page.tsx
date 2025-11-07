@@ -14,14 +14,28 @@ import {
   useTheme,
 } from "@mui/material";
 import { Field, Form, Formik, FormikProps } from "formik";
-import { FieldValueType, fields, initialValues, reviewFields } from "../fields";
+import {
+  FieldValueType,
+  fieldNames,
+  fields,
+  initialValues,
+  reviewFields,
+} from "../fields";
 import React, { use, useRef, useState } from "react";
+import {
+  TripStyledSubText,
+  TripStyledText,
+} from "@/components/typography/TripTypography";
 import { bluePalette, skyPalette } from "@/utils/theme/tripColor";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import FamilyIcon from "@/assets/icons/human-male-child.svg";
 import { ReviewContext } from "./review/ReviewContext";
 import TripSnackbar from "@/components/tripSnackbar/TripSnackbar";
-import { TripStyledText } from "@/components/typography/TripTypography";
+import { getErrorMessage } from "@/utils/APIInterceptor";
+import { getItinenaryById } from "@/tripAPI/itinenary";
+import { numberToINR } from "@/utils/format/numberToMoney";
+import { postQuotation } from "@/tripAPI/quotation";
 import { useRouter } from "next/navigation";
 
 const steps = ["Step 1", "Step 2", "Step 3"];
@@ -59,10 +73,59 @@ const page = ({ params }: Props) => {
     setActiveStep((prevStep) => prevStep - 1);
   };
 
-  const submitForm = async (values: FieldValueType) => {
-    console.log({ values });
-  };
+  const { data: trip_details } = useQuery({
+    queryKey: ["trip_details", id],
+    queryFn: async () => {
+      const response = await getItinenaryById({ id });
+      const { data } = response ?? {};
+      return data;
+    },
+  });
+  const { mutate: createQuotation } = useMutation({
+    mutationKey: ["request_quotation"],
+    mutationFn: async (payload: Parameters<typeof postQuotation>[0]) => {
+      const response = await postQuotation(payload);
+      return response;
+    },
+    onSuccess: () => {
+      console.log("redirect to next page");
+      router.push(`/quotation_list`);
+    },
+    onError: (err) => {
+      const message = getErrorMessage(err);
+      setSnackbar({ message, severity: "error" });
+    },
+  });
 
+  const submitForm = async (values: FieldValueType) => {
+    const {
+      adults,
+      car_budget_range,
+      car_type,
+      children,
+      quote_source,
+      requirement,
+      stay_budget_range,
+      stay,
+    } = values ?? {};
+
+    const payload = {
+      trip_id: id,
+      transport: {
+        type: car_type,
+      },
+      stay: {
+        type: stay,
+      },
+      price: +car_budget_range + +stay_budget_range,
+      people: +adults + +children,
+      quote_source,
+      requirement,
+    };
+
+    createQuotation(payload);
+  };
+  console.log({ trip_details });
   return (
     <ReviewContext.Provider
       value={{
@@ -72,15 +135,21 @@ const page = ({ params }: Props) => {
           requirement: "",
           stay: "",
           car_type: "",
-          car_budget_range: "",
+          car_budget_range: 0,
+          stay_budget_range: 0,
           quote_source: "",
         },
       }}
     >
       <Box sx={{ px: 2, mt: 4 }}>
         <Box sx={{ mb: 2 }}>
-          <Typography variant="h3">Create Personalised Itinerary </Typography>
-          <TripStyledText>AI Power Itinerary Planning</TripStyledText>
+          <Typography variant="h3">{trip_details?.location} Trip </Typography>
+          <TripStyledSubText>
+            {`${trip_details?.days.length}D/${
+              (trip_details?.days.length ?? 0) + 1
+            }N`}{" "}
+            itinerary
+          </TripStyledSubText>
         </Box>
         {activeStep < steps.length && (
           <Box sx={{ width: "100%" }}>
@@ -203,7 +272,7 @@ const page = ({ params }: Props) => {
                               fontSize: 16,
                             }}
                           >
-                            20,000 - 30,000
+                            {trip_details?.estimated_trip_cost}
                           </Typography>
                         </Box>
                         <Box>
@@ -219,7 +288,7 @@ const page = ({ params }: Props) => {
                               fontSize: 16,
                             }}
                           >
-                            3,000
+                            {numberToINR(values[fieldNames.stay_budget_range])}
                           </Typography>
                         </Box>
                       </Box>
@@ -236,7 +305,9 @@ const page = ({ params }: Props) => {
                         }}
                       >
                         <Chip
-                          label="4D/5D"
+                          label={`${values[fieldNames.children]} + ${
+                            values[fieldNames.adults]
+                          }`}
                           icon={
                             <FamilyIcon fill={theme.palette.success.light} />
                           }
@@ -251,7 +322,9 @@ const page = ({ params }: Props) => {
                           }}
                         />
                         <Chip
-                          label="4D/5D"
+                          label={`${trip_details?.days.length}D/${
+                            (trip_details?.days.length ?? 0) + 1
+                          }N`}
                           sx={{
                             border: "2px solid",
                             borderColor: "#6750A4",
@@ -274,15 +347,15 @@ const page = ({ params }: Props) => {
                         }}
                       >
                         <Box>
-                          <TripStyledText>From 12th Jan</TripStyledText>
+                          <TripStyledText>From -</TripStyledText>
                           <Typography sx={{ fontWeight: 700, fontSize: 16 }}>
-                            Guwahati
+                            -
                           </Typography>
                         </Box>
                         <Box>
-                          <TripStyledText>To 19th Jan</TripStyledText>
+                          <TripStyledText>To -</TripStyledText>
                           <Typography sx={{ fontWeight: 700, fontSize: 16 }}>
-                            Shillong
+                            {trip_details?.location}
                           </Typography>
                         </Box>
                       </Box>
@@ -315,9 +388,10 @@ const page = ({ params }: Props) => {
                         <Button
                           fullWidth
                           // disabled={activeStep === 0}
-                          onClick={() => {
-                            router.push(`/quotation_list`);
-                          }}
+                          // onClick={() => {
+                          //   router.push(`/quotation_list`);
+                          // }}
+                          type="submit"
                           variant="contained"
                         >
                           Request Quotes

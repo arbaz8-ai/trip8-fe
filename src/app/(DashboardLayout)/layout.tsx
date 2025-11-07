@@ -31,7 +31,7 @@ export default function RootLayout({
   // }
   return (
     <MainWrapper>
-      <Box sx={{ width: "100%" }}>{children}</Box>
+      <Box sx={{ width: "100%", mb: 8 }}>{children}</Box>
       <BottomNavTab />
     </MainWrapper>
   );
