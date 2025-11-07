@@ -11,6 +11,7 @@ export enum fieldNames {
   stay = "stay",
   car_type = "car_type",
   car_budget_range = "car_budget_range",
+  stay_budget_range = "stay_budget_range",
   quote_source = "quote_source",
 }
 
@@ -20,7 +21,8 @@ export interface FieldValueType {
   [fieldNames.requirement]: string;
   [fieldNames.stay]: string;
   [fieldNames.car_type]: string;
-  [fieldNames.car_budget_range]: string;
+  [fieldNames.car_budget_range]: number;
+  [fieldNames.stay_budget_range]: number;
   [fieldNames.quote_source]: string;
 }
 
@@ -125,6 +127,13 @@ export const fields = [
       component: RangeField,
       colCount: 12,
       label: "Budget Range For Car (with Driver)",
+      color: "primary",
+    },
+    {
+      name: fieldNames.stay_budget_range,
+      component: RangeField,
+      colCount: 12,
+      label: "Budget Range For Hotels",
       color: "primary",
     },
   ],
@@ -248,7 +257,13 @@ export const reviewFields = [
     label: "Budget Range For Car (with Driver)",
     color: "primary",
   },
-
+  {
+    name: fieldNames.stay_budget_range,
+    component: RangeField,
+    colCount: 12,
+    label: "Budget Range For Hotels",
+    color: "primary",
+  },
   {
     name: fieldNames.quote_source,
     component: TextField,
@@ -270,6 +285,7 @@ export const initialValues: FieldValueType = {
   [fieldNames.requirement]: "full_tour_package",
   [fieldNames.stay]: "star_4",
   [fieldNames.car_type]: "Seater_7_Compact",
-  [fieldNames.car_budget_range]: "5000",
+  [fieldNames.car_budget_range]: 5000,
+  [fieldNames.stay_budget_range]: 5000,
   [fieldNames.quote_source]: "",
 };

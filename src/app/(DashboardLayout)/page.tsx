@@ -151,54 +151,62 @@ const HomePage = () => {
         </Box>
       </Box>
 
-      <Box sx={{ mt: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          All Trips
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            overflowX: "auto",
-            pb: 2,
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
-        >
-          {itinenariesList?.map((item) => {
-            const {
-              days,
-              nights,
-              itineraries,
-              destination,
-              _id: tripID,
-            } = item ?? {};
-            const { location, _id: itinenaryID } = itineraries ?? {};
-            const CITY = location.split(",")[0];
-            return (
-              <Box
-                key={tripID}
-                sx={{ minWidth: 240, flexShrink: 0, cursor: "pointer" }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  redirectToDetailTrip(itinenaryID);
-                }}
-              >
-                <TripCard
-                  id={tripID}
-                  // date={"10 oct 2025"}
-                  destination={destination}
-                  duration={`${days}D/${nights}N`}
-                  place={`${CITY}`}
-                />
-              </Box>
-            );
-          })}
+      {itinenariesList?.length ? (
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            All Trips
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              overflowX: "auto",
+              pb: 2,
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              msOverflowStyle: "none",
+              scrollbarWidth: "none",
+            }}
+          >
+            {itinenariesList?.map((item) => {
+              const {
+                days,
+                nights,
+                itineraries,
+                destination,
+                _id: tripID,
+              } = item ?? {};
+              const { location, _id: itinenaryID } = itineraries ?? {};
+              const CITY = location.split(",")[0];
+              return (
+                <Box
+                  key={tripID}
+                  sx={{ minWidth: 240, flexShrink: 0, cursor: "pointer" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    redirectToDetailTrip(itinenaryID);
+                  }}
+                >
+                  <TripCard
+                    id={tripID}
+                    // date={"10 oct 2025"}
+                    destination={destination}
+                    duration={`${days}D/${nights}N`}
+                    place={`${CITY}`}
+                  />
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
-      </Box>
+      ) : (
+        <Typography
+          sx={{ textAlign: "center", fontSize: 20, fontWeight: 700, my: 2 }}
+        >
+          No Trips Found
+        </Typography>
+      )}
 
       <Box
         sx={{
@@ -254,36 +262,6 @@ const HomePage = () => {
               </Box>
             );
           })}
-        </Box>
-      </Box>
-
-      <Box sx={{ mt: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Meghalaya Itineraries
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            overflowX: "auto",
-            pb: 2,
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
-        >
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Box key={index} sx={{ minWidth: 240, flexShrink: 0 }}>
-              <TripCard
-                id={String(index)}
-                date={"10 oct 2025"}
-                duration="5D/6N"
-                place="Asssam"
-              />
-            </Box>
-          ))}
         </Box>
       </Box>
     </Container>

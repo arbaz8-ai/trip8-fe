@@ -28,7 +28,7 @@ const Protectedlayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <Box sx={{ width: "390px", mb: 10, mx: "auto" }}>
+    <Box sx={{ width: "390px", mx: "auto" }}>
       {children}
       <BottomNavTab />
     </Box>
