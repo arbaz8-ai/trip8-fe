@@ -1,27 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  ArrowBack,
-  Cancel,
-  CheckCircle,
-  ExpandLess,
-  ExpandMore,
-} from "@mui/icons-material";
+import { ArrowBack, ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
   Box,
-  Typography,
-  IconButton,
-  Divider,
-  TextField,
   Button,
-  useTheme,
   Collapse,
+  Divider,
+  IconButton,
+  TextField,
+  Typography,
+  useTheme,
 } from "@mui/material";
+import React, { useState } from "react";
 
 const FinalCheckPage: React.FC = () => {
   const theme = useTheme();
-  const [discountCode, setDiscountCode] = useState("DISCOUNT20OFF");
+  const [discountCode, setDiscountCode] = useState("");
   const [openPricing, setOpenPricing] = useState(true);
 
   return (
@@ -44,7 +38,6 @@ const FinalCheckPage: React.FC = () => {
           p: 2,
         }}
       >
-        {/* Header */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
           <IconButton sx={{ color: "black" }}>
             <ArrowBack />
@@ -57,14 +50,13 @@ const FinalCheckPage: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* Route */}
         <Box
           sx={{
             borderRadius: 2,
             p: 2,
             textAlign: "center",
             mb: 2,
-            backgroundColor: "#f4f6f8",
+            backgroundColor: "grey.100",
           }}
         >
           <Box
@@ -76,9 +68,8 @@ const FinalCheckPage: React.FC = () => {
               mb: 0.5,
             }}
           >
-            <Typography fontWeight={600}>Assam</Typography>
+            <Typography fontWeight={600}>-</Typography>
 
-            {/* Dotted line between Assam and Guwahati */}
             <Box
               sx={{
                 position: "absolute",
@@ -91,14 +82,13 @@ const FinalCheckPage: React.FC = () => {
               }}
             ></Box>
 
-            <Typography fontWeight={600}>Guwahati</Typography>
+            <Typography fontWeight={600}>-</Typography>
           </Box>
           <Typography variant="body2" color="text.secondary">
-            06.00 hrs
+            -- hrs
           </Typography>
         </Box>
 
-        {/* Number of Person & Trip Type */}
         <Box
           sx={{
             borderRadius: 2,
@@ -108,35 +98,31 @@ const FinalCheckPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            {/* Left Section */}
             <Box sx={{ flex: 0.9 }}>
-              <Typography fontWeight={600}>8 Person</Typography>
+              <Typography fontWeight={600}>- Person</Typography>
               <Typography variant="body2" color="text.secondary">
-                (4) Adult | (4) Children
+                (-) Adult | (-) Children
               </Typography>
             </Box>
 
-            {/* Divider */}
             <Divider
               orientation="vertical"
               flexItem
               sx={{ mx: 2, borderColor: "#d1d5db" }}
             />
 
-            {/* Right Section */}
             <Box sx={{ flex: 1.3, textAlign: "right" }}>
               <Typography fontWeight={600}>Trip Type</Typography>
               <Typography variant="body2" color="text.secondary">
-                Adventure, Romantic
+                -, -
               </Typography>
             </Box>
           </Box>
         </Box>
 
-        {/* Inclusion */}
         <Box
           sx={{
-            backgroundColor: "#ffffff",
+            backgroundColor: "common.white",
             borderRadius: "16px",
             p: 2.5,
             mb: 3,
@@ -147,7 +133,7 @@ const FinalCheckPage: React.FC = () => {
             fontWeight={600}
             fontSize="1rem"
             mb={1.5}
-            sx={{ color: "#0f172a" }}
+            sx={{ color: theme.palette.text.primary }}
           >
             Inclusion
           </Typography>
@@ -159,7 +145,7 @@ const FinalCheckPage: React.FC = () => {
               gap: 1.5,
             }}
           >
-            {[
+            {/* {[
               "Food",
               "Pickup Service(if you included in Pack.)",
               "Tour Guide",
@@ -197,14 +183,14 @@ const FinalCheckPage: React.FC = () => {
                   {item}
                 </Typography>
               </Box>
-            ))}
+            ))} */}
+            --
           </Box>
         </Box>
 
-        {/* Exclusion */}
         <Box
           sx={{
-            backgroundColor: "#ffffff",
+            backgroundColor: theme.palette.common.white,
             borderRadius: "16px",
             p: 2.5,
             mb: 3,
@@ -215,7 +201,7 @@ const FinalCheckPage: React.FC = () => {
             fontWeight={600}
             fontSize="1rem"
             mb={1.5}
-            sx={{ color: "#0f172a" }}
+            sx={{ color: theme.palette.text.primary }}
           >
             Exclusion
           </Typography>
@@ -227,7 +213,7 @@ const FinalCheckPage: React.FC = () => {
               gap: 1.5,
             }}
           >
-            {["Wi-fi", "Airport Tickets", "TV", "Smoking"].map(
+            {/* {["Wi-fi", "Airport Tickets", "TV", "Smoking"].map(
               (item, index) => (
                 <Box
                   key={index}
@@ -260,17 +246,17 @@ const FinalCheckPage: React.FC = () => {
                   </Typography>
                 </Box>
               )
-            )}
+            )} */}
+            --
           </Box>
         </Box>
 
-        {/* Discount Code */}
         <Box
           sx={{
             borderRadius: 2,
             p: 2,
             mb: 2,
-            backgroundColor: "#f4f6f8",
+            backgroundColor: "grey.100",
           }}
         >
           <Typography fontWeight={600} mb={1.5}>
@@ -311,12 +297,11 @@ const FinalCheckPage: React.FC = () => {
           </Box>
         </Box>
 
-        {/* Pricing Details */}
         <Box
           sx={{
             borderRadius: 2,
             p: 2,
-            backgroundColor: "#f4f6f8",
+            backgroundColor: "grey.100",
             mb: 3,
           }}
         >
@@ -343,30 +328,29 @@ const FinalCheckPage: React.FC = () => {
                 sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
               >
                 <Typography>Trip Charges</Typography>
-                <Typography>₹ 20,000</Typography>
+                <Typography>--</Typography>
               </Box>
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
               >
                 <Typography>Tax</Typography>
-                <Typography>₹ 2,000</Typography>
+                <Typography>--</Typography>
               </Box>
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
               >
                 <Typography>Discount</Typography>
-                <Typography>₹ 2,000</Typography>
+                <Typography>--</Typography>
               </Box>
               <Divider sx={{ my: 1 }} />
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography fontWeight={600}>Total</Typography>
-                <Typography fontWeight={600}>₹ 22,000</Typography>
+                <Typography fontWeight={600}>--</Typography>
               </Box>
             </Box>
           </Collapse>
         </Box>
 
-        {/* Action Buttons (Below Pricing Details) */}
         <Box
           sx={{
             display: "flex",
@@ -376,12 +360,9 @@ const FinalCheckPage: React.FC = () => {
             mb: 2,
           }}
         >
-          {/* Need Help Button */}
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#007bff",
-              color: "#ffffff",
               textTransform: "none",
               fontWeight: 500,
               borderRadius: "12px",
@@ -392,8 +373,6 @@ const FinalCheckPage: React.FC = () => {
               display: "flex",
               alignItems: "center",
               gap: 1,
-              boxShadow: "0px 2px 6px rgba(0,0,0,0.1)",
-              "&:hover": { backgroundColor: "#006ae6" },
             }}
           >
             <Box
@@ -410,15 +389,12 @@ const FinalCheckPage: React.FC = () => {
             fullWidth
             variant="contained"
             sx={{
-              backgroundColor: "#007bff",
-              color: "#ffffff",
               textTransform: "none",
               fontWeight: 600,
               borderRadius: "12px",
               py: 1.3,
               fontSize: "1rem",
               boxShadow: "0px 3px 8px rgba(0,0,0,0.1)",
-              "&:hover": { backgroundColor: "#006ae6" },
             }}
           >
             Pay Rs.500 & Reserve (100% Refundable)

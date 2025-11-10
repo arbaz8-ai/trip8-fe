@@ -1,47 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
 import {
   ArrowBack,
   CheckCircle,
   ExpandLess,
   ExpandMore,
-  Cancel
 } from "@mui/icons-material";
 import {
   Box,
-  Typography,
-  IconButton,
-  Divider,
   Button,
-  useTheme,
   Collapse,
+  Divider,
+  IconButton,
+  Typography,
+  lighten,
 } from "@mui/material";
+import React, { useState } from "react";
+
+import theme from "@/utils/theme";
 
 const BookingDetailsPage: React.FC = () => {
-  const theme = useTheme();
+  // const theme = useTheme();
   const [openOverview, setOpenOverview] = useState(true);
-  const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedDay, setSelectedDay] = useState<number>(1);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-
-  // Sample day-wise itinerary data
-  const itineraryData = {
-    1: [
-      "Arrival in Guwahati and drive to Bhalukpong",
-      "Travel from Bhalukpong to Dirang",
-      "Journey through Bomdila and Sela Pass to Tawang",
-      "Explore the local sights of Tawang",
-      "Travel from Bhalukpong to Dirang",
-      "Drive From Bomdila to Guwahati Airport",
-    ],
-    2: [
-      "Visit Tawang Monastery",
-      "Drive to PTSO Lake",
-      "Evening free at leisure",
-    ],
-    3: ["Explore Dirang Valley", "Visit Sangti Valley", "Drive to Bomdila"],
-    4: ["Return journey to Guwahati", "End of tour"],
-  };
 
   return (
     <Box
@@ -82,16 +64,12 @@ const BookingDetailsPage: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* Booking Info */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            border: "1px solid #e5e7eb",
-            borderRadius: "12px",
             p: 2,
-            backgroundColor: "#f9fafb",
             mb: 3,
           }}
         >
@@ -102,7 +80,7 @@ const BookingDetailsPage: React.FC = () => {
             <Typography
               sx={{ fontSize: "0.95rem", fontWeight: 600, color: "#111827" }}
             >
-              9006-57854-547
+              --
             </Typography>
           </Box>
 
@@ -119,17 +97,16 @@ const BookingDetailsPage: React.FC = () => {
             <Typography
               sx={{ fontSize: "1rem", fontWeight: 700, color: "#111827" }}
             >
-              12-09-2025
+              --
             </Typography>
           </Box>
         </Box>
 
-        {/* Trip Overview */}
         <Box
           sx={{
             borderRadius: 2,
             p: 2,
-            backgroundColor: "#f4f6f8",
+            backgroundColor: lighten(theme.palette.primary.light, 0.95),
             mb: 3,
           }}
         >
@@ -174,7 +151,7 @@ const BookingDetailsPage: React.FC = () => {
                   mb: 0.5,
                 }}
               >
-                <Typography fontWeight={600}>Assam</Typography>
+                <Typography fontWeight={600}>--</Typography>
                 <Box
                   sx={{
                     position: "absolute",
@@ -186,10 +163,10 @@ const BookingDetailsPage: React.FC = () => {
                     transform: "translateY(-50%)",
                   }}
                 ></Box>
-                <Typography fontWeight={600}>Guwahati</Typography>
+                <Typography fontWeight={600}>--</Typography>
               </Box>
               <Typography variant="body2" color="text.secondary">
-                06.00 hrs
+                -- hrs
               </Typography>
             </Box>
             {/* Inclusion */}
@@ -218,7 +195,7 @@ const BookingDetailsPage: React.FC = () => {
                   gap: 1.5,
                 }}
               >
-                {[
+                {/* {[
                   "Food",
                   "Pickup Service(if you included in Pack.)",
                   "Tour Guide",
@@ -256,7 +233,8 @@ const BookingDetailsPage: React.FC = () => {
                       {item}
                     </Typography>
                   </Box>
-                ))}
+                ))} */}
+                --
               </Box>
             </Box>
 
@@ -286,7 +264,7 @@ const BookingDetailsPage: React.FC = () => {
                   gap: 1.5,
                 }}
               >
-                {["Wi-fi", "Airport Tickets", "TV", "Smoking"].map(
+                {/* {["Wi-fi", "Airport Tickets", "TV", "Smoking"].map(
                   (item, index) => (
                     <Box
                       key={index}
@@ -319,7 +297,8 @@ const BookingDetailsPage: React.FC = () => {
                       </Typography>
                     </Box>
                   )
-                )}
+                )} */}
+                --
               </Box>
             </Box>
           </Collapse>
@@ -356,7 +335,7 @@ const BookingDetailsPage: React.FC = () => {
                   mt: 0.3,
                 }}
               >
-                ₹ 500.00
+                --
               </Typography>
             </Box>
 
@@ -378,7 +357,7 @@ const BookingDetailsPage: React.FC = () => {
                   mt: 0.3,
                 }}
               >
-                ₹ 19,500
+                --
               </Typography>
             </Box>
           </Box>
@@ -407,11 +386,9 @@ const BookingDetailsPage: React.FC = () => {
               mt: 0.3,
             }}
           >
-            ₹ 25,000
+            --
           </Typography>
         </Box>
-
-        
 
         {/* Itinerary Details Section */}
         <Box
@@ -524,9 +501,9 @@ const BookingDetailsPage: React.FC = () => {
               boxShadow: "inset 0 0 4px rgba(0,0,0,0.04)",
             }}
           >
-            {itineraryData[selectedDay].map((item, index) => (
+            {/* {itineraryData[selectedDay]?.map((item: any, index: number) => (
               <Box
-                key={index}
+                key={selectedDay}
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -542,10 +519,9 @@ const BookingDetailsPage: React.FC = () => {
                   },
                 }}
               >
-                {/* Number box (consistent size for all days) */}
                 <Box
                   sx={{
-                    backgroundColor: "#007bff",
+                    backgroundColor: "primary.main",
                     color: "#ffffff",
                     fontWeight: 700,
                     borderRadius: "10px",
@@ -555,34 +531,33 @@ const BookingDetailsPage: React.FC = () => {
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: 16,
-                    flexShrink: 0, // prevents resizing
+                    flexShrink: 0,
                     mr: 2,
                   }}
                 >
                   {index + 1}
                 </Box>
 
-                {/* Text aligned perfectly */}
                 <Typography
                   sx={{
                     fontSize: "0.92rem",
                     color: "#111827",
                     fontWeight: 500,
                     lineHeight: 1.4,
-                    flex: 1, // ensures consistent spacing
+                    flex: 1,
                     wordWrap: "break-word",
                   }}
                 >
                   {item}
                 </Typography>
               </Box>
-            ))}
+            ))} */}
           </Box>
         </Box>
         {/* Traveler Info & FAQ Section */}
         <Box
           sx={{
-            backgroundColor: "#ffffff",
+            backgroundColor: theme.palette.common.white,
             borderRadius: "16px",
             p: 2.5,
             boxShadow: "0px 3px 10px rgba(0,0,0,0.05)",
@@ -615,7 +590,7 @@ const BookingDetailsPage: React.FC = () => {
                 Traveler Expert
               </Typography>
             </Box>
-            <Box
+            {/* <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -631,7 +606,7 @@ const BookingDetailsPage: React.FC = () => {
               }}
             >
               <Typography component="span"> 4.6</Typography>
-            </Box>
+            </Box> */}
           </Box>
 
           {/* Tags */}
@@ -659,7 +634,7 @@ const BookingDetailsPage: React.FC = () => {
                     px: 1.8,
                     py: 0.7,
                     borderRadius: "40px",
-                    backgroundColor: "#f9fafb",
+                    backgroundColor: "grey.100",
                     color: "#111827",
                     fontSize: 12.5,
                     fontWeight: 500,
