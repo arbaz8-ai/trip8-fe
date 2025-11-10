@@ -13,7 +13,7 @@ const Protectedlayout = ({ children }: { children: React.ReactNode }) => {
       try {
         const token = localStorage.getItem("token");
 
-        if (!token) {
+        if (token) {
           console.log("No token found, redirecting to login");
           router.push("/authentication/login");
         }
